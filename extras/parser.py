@@ -24,8 +24,11 @@ class TransportFile(yaml.YAMLObject):
 		lSplit = links.rsplit('\t')
 		l = []
 		for i,stTmp in enumerate(self.stations):
-			if not lSplit[i] == "0":
-				st.addLink(Link(stTmp.id,int(lSplit[i])))
+			cost = lSplit[i]
+			if not cost == "0":
+				st.addLink(Link(stTmp.id,int(cost)))
+				# Afegim la relacio a l'altre banda
+				self.stations[stTmp.id-1].addLink(Link(st.id,int(cost)))
 
 
 class Station(yaml.YAMLObject):
@@ -42,9 +45,6 @@ class Station(yaml.YAMLObject):
 
 	def addLink(self,link):
 		self.links.append(link)
-
-	def __str__(self):
-		return self.name+" "+str(self.y)
 
 class Link(yaml.YAMLObject):
 	"""docstring for Link"""
