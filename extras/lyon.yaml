@@ -1,0 +1,321 @@
+!TransportFile
+name: Lyon
+type: Metro
+lines: [D, A, C, B, E]
+stations:
+- !Station
+  id: 1
+  line: D
+  links: []
+  name: GARE_VAISE
+  x: -6
+  y: 5
+- !Station
+  id: 2
+  line: D
+  links:
+  - !Link {cost: 2, id: 1}
+  name: VALMY
+  x: -6
+  y: 4
+- !Station
+  id: 3
+  line: D
+  links:
+  - !Link {cost: 2, id: 2}
+  name: GORGE_DE_LOUP
+  x: -6
+  y: 3
+- !Station
+  id: 4
+  line: D
+  links:
+  - !Link {cost: 2, id: 3}
+  name: VIEUX_LYON
+  x: -5
+  y: 1
+- !Station
+  id: 5
+  line: D
+  links:
+  - !Link {cost: 3, id: 4}
+  name: BELLECOUR
+  x: -3
+  y: 1
+- !Station
+  id: 6
+  line: D
+  links:
+  - !Link {cost: 2, id: 5}
+  name: GUILLOTIERE
+  x: -1
+  y: 0
+- !Station
+  id: 7
+  line: D
+  links:
+  - !Link {cost: 1, id: 6}
+  name: SAXE-GAMBETTA
+  x: 0
+  y: 0
+- !Station
+  id: 8
+  line: D
+  links:
+  - !Link {cost: 3, id: 7}
+  name: MONPLAISIR-LUMIERE
+  x: 3
+  y: -1
+- !Station
+  id: 9
+  line: D
+  links:
+  - !Link {cost: 1, id: 8}
+  name: GRANGE-BLANCHE
+  x: 4
+  y: -1
+- !Station
+  id: 10
+  line: D
+  links:
+  - !Link {cost: 1, id: 9}
+  name: LAENNEC
+  x: 5
+  y: -2
+- !Station
+  id: 11
+  line: D
+  links:
+  - !Link {cost: 2, id: 10}
+  name: MERMOZ-PINEL
+  x: 5
+  y: -3
+- !Station
+  id: 12
+  line: D
+  links:
+  - !Link {cost: 2, id: 11}
+  name: PARILLY
+  x: 5
+  y: -4
+- !Station
+  id: 13
+  line: D
+  links:
+  - !Link {cost: 2, id: 12}
+  name: GARE_DE_VENISSEUX
+  x: 5
+  y: -5
+- !Station
+  id: 14
+  line: A
+  links: []
+  name: LAURENT_BONNEVAY
+  x: 8
+  y: 3
+- !Station
+  id: 15
+  line: A
+  links:
+  - !Link {cost: 4, id: 14}
+  name: REPUBLIQUE
+  x: 3
+  y: 4
+- !Station
+  id: 16
+  line: A
+  links:
+  - !Link {cost: 1, id: 15}
+  name: CHARPENNES
+  x: 2
+  y: 5
+- !Station
+  id: 17
+  line: A
+  links:
+  - !Link {cost: 1, id: 16}
+  name: MASSENA
+  x: 0
+  y: 4
+- !Station
+  id: 18
+  line: C
+  links:
+  - !Link {cost: 4, id: 17}
+  name: HOTEL_DE_VILLE
+  x: -3
+  y: 3
+- !Station
+  id: 19
+  line: A
+  links:
+  - !Link {cost: 2, id: 18}
+  name: CORDELIERS
+  x: -3
+  y: 2
+- !Station
+  id: 20
+  line: A
+  links: []
+  name: AMPERE
+  x: -3
+  y: 0
+- !Station
+  id: 21
+  line: A
+  links:
+  - !Link {cost: 2, id: 20}
+  name: PERRACHE
+  x: -3
+  y: -1
+- !Station
+  id: 22
+  line: C
+  links: []
+  name: CUIRE
+  x: -2
+  y: 7
+- !Station
+  id: 23
+  line: C
+  links:
+  - !Link {cost: 2, id: 22}
+  name: HENON
+  x: -2
+  y: 6
+- !Station
+  id: 24
+  line: C
+  links:
+  - !Link {cost: 2, id: 18}
+  - !Link {cost: 2, id: 23}
+  name: CROIX-ROUSSE
+  x: -3
+  y: 5
+- !Station
+  id: 25
+  line: B
+  links: []
+  name: BROTTEAUX
+  x: 1
+  y: 3
+- !Station
+  id: 26
+  line: B
+  links:
+  - !Link {cost: 2, id: 25}
+  name: PART-DIEU
+  x: 1
+  y: 2
+- !Station
+  id: 27
+  line: B
+  links:
+  - !Link {cost: 1, id: 7}
+  - !Link {cost: 1, id: 26}
+  name: PLACE_GUICHAR
+  x: 1
+  y: 0
+- !Station
+  id: 28
+  line: B
+  links:
+  - !Link {cost: 1, id: 27}
+  name: JEAN_MACE
+  x: 0
+  y: -2
+- !Station
+  id: 29
+  line: B
+  links:
+  - !Link {cost: 2, id: 28}
+  name: PLACE_JEAN_JAURES
+  x: 0
+  y: -3
+- !Station
+  id: 30
+  line: B
+  links:
+  - !Link {cost: 2, id: 29}
+  name: DEBOURG
+  x: 0
+  y: -4
+- !Station
+  id: 31
+  line: B
+  links:
+  - !Link {cost: 2, id: 30}
+  name: STADE_DE_GERLAND
+  x: 0
+  y: -5
+- !Station
+  id: 32
+  line: E
+  links: []
+  name: FOURVIERE
+  x: -5
+  y: -1
+- !Station
+  id: 33
+  line: E
+  links: []
+  name: NINIMES
+  x: -5
+  y: -3
+- !Station
+  id: 34
+  line: E
+  links:
+  - !Link {cost: 1, id: 33}
+  name: ST JUST
+  x: -5
+  y: -4
+- !Station
+  id: 35
+  line: E
+  links:
+  - !Link {cost: 5, id: 4}
+  - !Link {cost: 2, id: 32}
+  - !Link {cost: 1, id: 33}
+  name: VIEUX_LYON
+  x: -5
+  y: 1
+- !Station
+  id: 36
+  line: A
+  links:
+  - !Link {cost: 3, id: 5}
+  - !Link {cost: 2, id: 19}
+  - !Link {cost: 1, id: 20}
+  name: BELLECOUR
+  x: -3
+  y: 1
+- !Station
+  id: 37
+  line: B
+  links:
+  - !Link {cost: 7, id: 7}
+  - !Link {cost: 2, id: 27}
+  - !Link {cost: 2, id: 28}
+  name: SAXE-GAMBETTA
+  x: 0
+  y: 0
+- !Station
+  id: 38
+  line: A
+  links:
+  - !Link {cost: 2, id: 17}
+  - !Link {cost: 6, id: 18}
+  - !Link {cost: 2, id: 19}
+  name: HOTEL_DE_VILLE
+  x: -3
+  y: 3
+- !Station
+  id: 39
+  line: B
+  links:
+  - !Link {cost: 7, id: 16}
+  - !Link {cost: 2, id: 25}
+  name: CHARPENNES
+  x: 2
+  y: 5
