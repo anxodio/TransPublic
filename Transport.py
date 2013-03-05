@@ -17,11 +17,11 @@ class Transport(yaml.YAMLObject):
 class Station(yaml.YAMLObject):
 	"""docstring for Station"""
 	yaml_tag = u'!Station'
-	def __init__(self, id, name, line, x, y, links):
+	def __init__(self, id, name, lines, x, y, links):
 		super(Station, self).__init__()
 		self.id = int(id)
 		self.name = name
-		self.line = line
+		self.lines = lines
 		self.x = int(x)
 		self.y = int(y)
 		self.links = links

@@ -4,7 +4,7 @@ name: Lyon
 stations:
 - !Station
   id: 1
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 2}
   name: GARE_VAISE
@@ -12,7 +12,7 @@ stations:
   y: 5
 - !Station
   id: 2
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 1}
   - !Link {cost: 2, id: 3}
@@ -21,7 +21,7 @@ stations:
   y: 4
 - !Station
   id: 3
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 2}
   - !Link {cost: 2, id: 4}
@@ -30,27 +30,29 @@ stations:
   y: 3
 - !Station
   id: 4
-  line: D
+  lines: [D, E]
   links:
   - !Link {cost: 2, id: 3}
   - !Link {cost: 3, id: 5}
-  - !Link {cost: 5, id: 35}
+  - !Link {cost: 2, id: 32}
+  - !Link {cost: 1, id: 33}
   name: VIEUX_LYON
   x: -5
   y: 1
 - !Station
   id: 5
-  line: D
+  lines: [D, A]
   links:
   - !Link {cost: 3, id: 4}
   - !Link {cost: 2, id: 6}
-  - !Link {cost: 3, id: 36}
+  - !Link {cost: 2, id: 19}
+  - !Link {cost: 1, id: 20}
   name: BELLECOUR
   x: -3
   y: 1
 - !Station
   id: 6
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 5}
   - !Link {cost: 1, id: 7}
@@ -59,18 +61,19 @@ stations:
   y: 0
 - !Station
   id: 7
-  line: D
+  lines: [D, B]
   links:
   - !Link {cost: 1, id: 6}
   - !Link {cost: 3, id: 8}
   - !Link {cost: 1, id: 27}
-  - !Link {cost: 7, id: 37}
+  - !Link {cost: 2, id: 27}
+  - !Link {cost: 2, id: 28}
   name: SAXE-GAMBETTA
   x: 0
   y: 0
 - !Station
   id: 8
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 3, id: 7}
   - !Link {cost: 1, id: 9}
@@ -79,7 +82,7 @@ stations:
   y: -1
 - !Station
   id: 9
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 1, id: 8}
   - !Link {cost: 1, id: 10}
@@ -88,7 +91,7 @@ stations:
   y: -1
 - !Station
   id: 10
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 1, id: 9}
   - !Link {cost: 2, id: 11}
@@ -97,7 +100,7 @@ stations:
   y: -2
 - !Station
   id: 11
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 10}
   - !Link {cost: 2, id: 12}
@@ -106,7 +109,7 @@ stations:
   y: -3
 - !Station
   id: 12
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 11}
   - !Link {cost: 2, id: 13}
@@ -115,7 +118,7 @@ stations:
   y: -4
 - !Station
   id: 13
-  line: D
+  lines: [D]
   links:
   - !Link {cost: 2, id: 12}
   name: GARE_DE_VENISSEUX
@@ -123,7 +126,7 @@ stations:
   y: -5
 - !Station
   id: 14
-  line: A
+  lines: [A]
   links:
   - !Link {cost: 4, id: 15}
   name: LAURENT_BONNEVAY
@@ -131,7 +134,7 @@ stations:
   y: 3
 - !Station
   id: 15
-  line: A
+  lines: [A]
   links:
   - !Link {cost: 4, id: 14}
   - !Link {cost: 1, id: 16}
@@ -140,57 +143,58 @@ stations:
   y: 4
 - !Station
   id: 16
-  line: A
+  lines: [A, B]
   links:
   - !Link {cost: 1, id: 15}
   - !Link {cost: 1, id: 17}
-  - !Link {cost: 7, id: 39}
+  - !Link {cost: 2, id: 25}
   name: CHARPENNES
   x: 2
   y: 5
 - !Station
   id: 17
-  line: A
+  lines: [A]
   links:
   - !Link {cost: 1, id: 16}
   - !Link {cost: 4, id: 18}
-  - !Link {cost: 2, id: 38}
+  - !Link {cost: 2, id: 18}
   name: MASSENA
   x: 0
   y: 4
 - !Station
   id: 18
-  line: C
+  lines: [C, A]
   links:
   - !Link {cost: 4, id: 17}
   - !Link {cost: 2, id: 19}
   - !Link {cost: 2, id: 24}
-  - !Link {cost: 6, id: 38}
+  - !Link {cost: 2, id: 17}
+  - !Link {cost: 2, id: 19}
   name: HOTEL_DE_VILLE
   x: -3
   y: 3
 - !Station
   id: 19
-  line: A
+  lines: [A]
   links:
   - !Link {cost: 2, id: 18}
-  - !Link {cost: 2, id: 36}
-  - !Link {cost: 2, id: 38}
+  - !Link {cost: 2, id: 5}
+  - !Link {cost: 2, id: 18}
   name: CORDELIERS
   x: -3
   y: 2
 - !Station
   id: 20
-  line: A
+  lines: [A]
   links:
   - !Link {cost: 2, id: 21}
-  - !Link {cost: 1, id: 36}
+  - !Link {cost: 1, id: 5}
   name: AMPERE
   x: -3
   y: 0
 - !Station
   id: 21
-  line: A
+  lines: [A]
   links:
   - !Link {cost: 2, id: 20}
   name: PERRACHE
@@ -198,7 +202,7 @@ stations:
   y: -1
 - !Station
   id: 22
-  line: C
+  lines: [C]
   links:
   - !Link {cost: 2, id: 23}
   name: CUIRE
@@ -206,7 +210,7 @@ stations:
   y: 7
 - !Station
   id: 23
-  line: C
+  lines: [C]
   links:
   - !Link {cost: 2, id: 22}
   - !Link {cost: 2, id: 24}
@@ -215,7 +219,7 @@ stations:
   y: 6
 - !Station
   id: 24
-  line: C
+  lines: [C]
   links:
   - !Link {cost: 2, id: 18}
   - !Link {cost: 2, id: 23}
@@ -224,16 +228,16 @@ stations:
   y: 5
 - !Station
   id: 25
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 2, id: 26}
-  - !Link {cost: 2, id: 39}
+  - !Link {cost: 2, id: 16}
   name: BROTTEAUX
   x: 1
   y: 3
 - !Station
   id: 26
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 2, id: 25}
   - !Link {cost: 1, id: 27}
@@ -242,28 +246,28 @@ stations:
   y: 2
 - !Station
   id: 27
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 1, id: 7}
   - !Link {cost: 1, id: 26}
   - !Link {cost: 1, id: 28}
-  - !Link {cost: 2, id: 37}
+  - !Link {cost: 2, id: 7}
   name: PLACE_GUICHAR
   x: 1
   y: 0
 - !Station
   id: 28
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 1, id: 27}
   - !Link {cost: 2, id: 29}
-  - !Link {cost: 2, id: 37}
+  - !Link {cost: 2, id: 7}
   name: JEAN_MACE
   x: 0
   y: -2
 - !Station
   id: 29
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 2, id: 28}
   - !Link {cost: 2, id: 30}
@@ -272,7 +276,7 @@ stations:
   y: -3
 - !Station
   id: 30
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 2, id: 29}
   - !Link {cost: 2, id: 31}
@@ -281,7 +285,7 @@ stations:
   y: -4
 - !Station
   id: 31
-  line: B
+  lines: [B]
   links:
   - !Link {cost: 2, id: 30}
   name: STADE_DE_GERLAND
@@ -289,76 +293,27 @@ stations:
   y: -5
 - !Station
   id: 32
-  line: E
+  lines: [E]
   links:
-  - !Link {cost: 2, id: 35}
+  - !Link {cost: 2, id: 4}
   name: FOURVIERE
   x: -5
   y: -1
 - !Station
   id: 33
-  line: E
+  lines: [E]
   links:
   - !Link {cost: 1, id: 34}
-  - !Link {cost: 1, id: 35}
+  - !Link {cost: 1, id: 4}
   name: NINIMES
   x: -5
   y: -3
 - !Station
   id: 34
-  line: E
+  lines: [E]
   links:
   - !Link {cost: 1, id: 33}
   name: ST JUST
   x: -5
   y: -4
-- !Station
-  id: 35
-  line: E
-  links:
-  - !Link {cost: 5, id: 4}
-  - !Link {cost: 2, id: 32}
-  - !Link {cost: 1, id: 33}
-  name: VIEUX_LYON
-  x: -5
-  y: 1
-- !Station
-  id: 36
-  line: A
-  links:
-  - !Link {cost: 3, id: 5}
-  - !Link {cost: 2, id: 19}
-  - !Link {cost: 1, id: 20}
-  name: BELLECOUR
-  x: -3
-  y: 1
-- !Station
-  id: 37
-  line: B
-  links:
-  - !Link {cost: 7, id: 7}
-  - !Link {cost: 2, id: 27}
-  - !Link {cost: 2, id: 28}
-  name: SAXE-GAMBETTA
-  x: 0
-  y: 0
-- !Station
-  id: 38
-  line: A
-  links:
-  - !Link {cost: 2, id: 17}
-  - !Link {cost: 6, id: 18}
-  - !Link {cost: 2, id: 19}
-  name: HOTEL_DE_VILLE
-  x: -3
-  y: 3
-- !Station
-  id: 39
-  line: B
-  links:
-  - !Link {cost: 7, id: 16}
-  - !Link {cost: 2, id: 25}
-  name: CHARPENNES
-  x: 2
-  y: 5
 type: Metro

@@ -62,7 +62,7 @@ class TransEditor(QtGui.QMainWindow):
 			table.insertRow(row)
 			table.setItem(row,0,QtGui.QTableWidgetItem(str(station.id)))
 			table.setItem(row,1,QtGui.QTableWidgetItem(station.name))
-			table.setItem(row,2,QtGui.QTableWidgetItem(station.line))
+			table.setItem(row,2,QtGui.QTableWidgetItem(str(station.lines)))
 			table.setItem(row,3,QtGui.QTableWidgetItem(str(station.x)))
 			table.setItem(row,4,QtGui.QTableWidgetItem(str(station.y)))
 			

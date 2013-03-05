@@ -1,3 +1,4 @@
 DEPENDENCES
 
 PyYaml (sudo apt-get install python-yaml)
+PyQt4 (sudo apt-get install python-qt4)
