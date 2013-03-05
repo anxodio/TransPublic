@@ -13,6 +13,48 @@ class Transport(yaml.YAMLObject):
 		self.lines = lines
 		self.stations = stations
 
+	def addLine(self,lin):
+		ok = True
+		if not lin in self.lines:
+			self.lines.append(lin)
+		else: ok = False
+		return ok
+
+	def changeLineName(self,old,new):
+		self.lines.remove(old)
+		self.lines.append(new)
+		# Ara, el canviem a les estacions
+		for st in self.stations:
+			try:
+				st.lines.remove(old) # Si aqui falla vol dir que no existeix, i no afegeix la nova
+				st.lines.append(new)
+			except:
+				pass
+
+	def deleteLine(self,lin):
+		self.lines.remove(lin)
+		for st in self.stations:
+			try:
+				st.lines.remove(lin) # Si aqui falla vol dir que no existeix
+			except:
+				pass
+
+	def getNewStationID(self):
+		maxId = 0
+		for st in self.stations:
+			if st.id > maxId: maxId = st.id
+
+		return maxId+1
+
+	def getStationByID(self,ident):
+		station = None
+		for st in self.stations:
+			if st.id == ident: 
+				station = st
+				break
+
+		return station
+
 
 class Station(yaml.YAMLObject):
 	"""docstring for Station"""
