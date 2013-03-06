@@ -262,7 +262,10 @@
     <property name="title">
      <string>Menú</string>
     </property>
+    <addaction name="menuNew"/>
     <addaction name="menuOpen"/>
+    <addaction name="menuSave"/>
+    <addaction name="menuSaveAs"/>
     <addaction name="separator"/>
     <addaction name="menuExit"/>
    </widget>
@@ -283,6 +286,30 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="menuNew">
+   <property name="text">
+    <string>Nou</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="menuSave">
+   <property name="text">
+    <string>Desar</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="menuSaveAs">
+   <property name="text">
+    <string>Desar com...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>

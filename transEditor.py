@@ -18,7 +18,10 @@ class TransEditor(QtGui.QMainWindow):
 		self.stDialog = QtGui.QDialog(self)
 		self.stDialog.ui = uic.loadUi('editStation.ui')
 
+		self.connect(self.ui.menuNew, QtCore.SIGNAL("activated()"), self.newFile)
 		self.connect(self.ui.menuOpen, QtCore.SIGNAL("activated()"), self.openFile)
+		self.connect(self.ui.menuSave, QtCore.SIGNAL("activated()"), self.saveFile)
+		self.connect(self.ui.menuSaveAs, QtCore.SIGNAL("activated()"), self.saveFileAs)
 
 		self.connect(self.ui.tbAddLine, QtCore.SIGNAL("clicked()"), self.addLine)
 		self.connect(self.ui.tbEditLine, QtCore.SIGNAL("clicked()"), self.editLine)
@@ -40,7 +43,8 @@ class TransEditor(QtGui.QMainWindow):
 		self.stDialog.connect(self.stDialog.ui.tableLinks, QtCore.SIGNAL("cellDoubleClicked(int,int)"), self.editLink)
 		self.stDialog.connect(self.stDialog.ui.tbDelLink, QtCore.SIGNAL("clicked()"), self.delLink)
 
-		self.trans = ""
+		self.trans = None # Per mantenir l'estructura del fitxer de transport en memoria
+		self.lastFileName = "" # Per guardar sense buscar a on
 
 	def unLockForm(self):
 		self.ui.mainFrame.setEnabled(True)
@@ -51,14 +55,53 @@ class TransEditor(QtGui.QMainWindow):
 		self.ui.tbEditStation.setEnabled(True)
 		self.ui.tbDelStation.setEnabled(True)
 
+	def comprovaCreat(self):
+		ok = True
+		if self.trans:
+			ret = QtGui.QMessageBox.warning(self, u"Atenció", u"Si continues pots perdre canvis no guardats. Estàs segur?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.Cancel)
+			if not ret == QtGui.QMessageBox.Yes:
+				ok = False
+		return ok
+
+	def setLastFileName(self,text):
+		self.lastFileName = text
+		self.ui.setWindowTitle("TransEdit ("+text+")")
+
+	def newFile(self):
+		"""Funció per crear un nou fitxer"""
+		if not self.comprovaCreat(): return
+		self.trans = Transport.Transport("","Metro",[],[])
+		self.loadLines()
+		self.loadStations()
+		self.unLockForm()
+
 	def openFile(self):
 		"""Funció per obrir el fitxer de transport que volem editar"""
+		if not self.comprovaCreat(): return
 		fitxer = QtGui.QFileDialog.getOpenFileName(self, "Selecciona un fitxer de Transport", ".", "*.yaml")
+		if not fitxer or fitxer == "": return
+		self.setLastFileName(str(fitxer))
 		self.trans = Transport.loadFile(str(fitxer))
 		self.loadLines()
 		self.loadStations()
 		self.ui.inputNom.setText(self.trans.name)
 		self.unLockForm()
+
+	def saveFile(self):
+		if not self.trans: return # No hi ha res a guardar
+		if self.lastFileName == "":
+			self.saveFileAs() # es un nou fitxer, s'ha de guardar buscant el nom
+			return
+
+		self.trans.name = str(self.ui.inputNom.text())
+		Transport.saveFile(self.trans,self.lastFileName)
+
+	def saveFileAs(self):
+		if not self.trans: return # No hi ha res a guardar
+		fitxer = QtGui.QFileDialog.getSaveFileName(self, "Desa el fitxer", ".", "*.yaml")
+		if not fitxer or fitxer == "": return
+		self.setLastFileName(str(fitxer))
+		self.saveFile()
 
 	def loadLines(self):
 		"""Omple el QListWidget listLines amb les linies de transport"""
@@ -71,9 +114,9 @@ class TransEditor(QtGui.QMainWindow):
 		text, ok = QtGui.QInputDialog.getText(self, u'Nova Línia', 'Entra el codi:')
 		if ok and not text == "":
 			#addLine retorna False si no pot insertar la nova linea
-			if self.trans.addLine(text):
+			if self.trans.addLine(str(text)):
 				#si la insertat a l0bjecte transport, també l'ha d'insertar a listLines
-				self.ui.listLines.addItem(text)
+				self.ui.listLines.addItem(str(text))
 			else:
 				QtGui.QMessageBox.warning(self, "Error", "La línia ja existeix", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 
@@ -87,7 +130,7 @@ class TransEditor(QtGui.QMainWindow):
 			new, ok = QtGui.QInputDialog.getText(self, u'Edita Línia', 'Entra el nou codi per '+old+':')
 			if ok and not new == "":
 				self.trans.changeLineName(str(old),str(new))
-				current.setText(new)
+				current.setText(str(new))
 				self.loadStations() # Recarreguem
 
 
@@ -254,8 +297,6 @@ class TransEditor(QtGui.QMainWindow):
 		ret = QtGui.QMessageBox.warning(self, "Avis", u"Segur que vols esborrar la Connexió?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.Cancel)
 		if ret == QtGui.QMessageBox.Yes:
 			d.tableLinks.removeRow(row)
-
-
 
 	def saveStation(self):
 		d = self.stDialog.ui

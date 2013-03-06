@@ -115,6 +115,9 @@ def loadFile(fitxer):
 	t = yaml.load(file(fitxer, 'r')) # Objecte Tranport
 	return t
 
+def saveFile(trans,fitxer):
+	yaml.dump(trans,file(fitxer, 'w'))
+
 
 if __name__ == '__main__':
 	print "Not an executable class"
