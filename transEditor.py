@@ -272,6 +272,10 @@ class TransEditor(QtGui.QMainWindow):
 		st.lines = lines
 
 		# Links: Els posem de nou, però hem de mantenir la relacio a l'altre banda
+		links = []
+		for i in range(d.tableLinks.rowCount()):
+			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()))) # tupla amb id,cost
+		st.reloadLinks(self.trans,links)
 
 		d.done(1)
 

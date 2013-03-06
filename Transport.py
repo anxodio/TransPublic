@@ -75,6 +75,33 @@ class Station(yaml.YAMLObject):
 		self.y = int(y)
 		self.links = links
 
+	def reloadLinks(self,trans,links):
+		# Primer, eliminem els links actuals
+		for link in self.links:
+			stLinked = trans.getStationByID(link.id)
+			stLinked.removeLinkToID(self.id) # l'eliminem de l'altre banda
+		self.links = [] # Un cop hem acabat d'eliminarlos de l'altre banda, buidem la llista
+
+		# Ara, posem els nous links
+		for link in links:
+			self.addLink(link[0],link[1]) # Ens afegim el link
+			stLinked = trans.getStationByID(link[0])
+			stLinked.addLink(self.id,link[1]) # L'afegim a l'altre banda
+
+	def addLink(self,ident,cost):
+		# Si tenim un link cap a aquest ID, l'eliminem
+		l = Link(ident,cost)
+		self.links.append(l)
+
+	def removeLinkToID(self,ident):
+		# Si tenim un link cap a aquest ID, l'eliminem
+		l = None
+		for link in self.links:
+			if link.id == ident:
+				l = link
+				break
+		if l: self.links.remove(l)
+
 class Link(yaml.YAMLObject):
 	"""docstring for Link"""
 	#Definim quina etiqueta del fitxer yaml correspon als objectes d'aquesta classe
