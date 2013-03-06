@@ -6,6 +6,7 @@ import yaml
 from PyQt4 import QtGui, QtCore, uic
 
 import Transport
+import viewer
 
 class TransEditor(QtGui.QMainWindow):
 	def __init__(self):
@@ -22,6 +23,7 @@ class TransEditor(QtGui.QMainWindow):
 		self.connect(self.ui.menuOpen, QtCore.SIGNAL("activated()"), self.openFile)
 		self.connect(self.ui.menuSave, QtCore.SIGNAL("activated()"), self.saveFile)
 		self.connect(self.ui.menuSaveAs, QtCore.SIGNAL("activated()"), self.saveFileAs)
+		self.connect(self.ui.menuGenMap, QtCore.SIGNAL("activated()"), self.genMap)
 
 		self.connect(self.ui.tbAddLine, QtCore.SIGNAL("clicked()"), self.addLine)
 		self.connect(self.ui.tbEditLine, QtCore.SIGNAL("clicked()"), self.editLine)
@@ -54,6 +56,10 @@ class TransEditor(QtGui.QMainWindow):
 		self.ui.tbAddStation.setEnabled(True)
 		self.ui.tbEditStation.setEnabled(True)
 		self.ui.tbDelStation.setEnabled(True)
+
+	def genMap(self):
+		if self.trans:
+			viewer.Map(self,self.trans)
 
 	def comprovaCreat(self):
 		ok = True
