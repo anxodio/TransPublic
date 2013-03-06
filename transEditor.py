@@ -52,6 +52,7 @@ class TransEditor(QtGui.QMainWindow):
 		self.ui.tbDelStation.setEnabled(True)
 
 	def openFile(self):
+		"""Funció per obrir el fitxer de transport que volem editar"""
 		fitxer = QtGui.QFileDialog.getOpenFileName(self, "Selecciona un fitxer de Transport", ".", "*.yaml")
 		self.trans = Transport.loadFile(str(fitxer))
 		self.loadLines()
@@ -60,6 +61,7 @@ class TransEditor(QtGui.QMainWindow):
 		self.unLockForm()
 
 	def loadLines(self):
+		"""Omple el QListWidget listLines amb les linies de transport"""
 		l = self.ui.listLines
 		l.clear()
 		for line in self.trans.lines:
@@ -68,7 +70,9 @@ class TransEditor(QtGui.QMainWindow):
 	def addLine(self):
 		text, ok = QtGui.QInputDialog.getText(self, u'Nova Línia', 'Entra el codi:')
 		if ok and not text == "":
+			#addLine retorna False si no pot insertar la nova linea
 			if self.trans.addLine(text):
+				#si la insertat a l0bjecte transport, també l'ha d'insertar a listLines
 				self.ui.listLines.addItem(text)
 			else:
 				QtGui.QMessageBox.warning(self, "Error", "La línia ja existeix", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
