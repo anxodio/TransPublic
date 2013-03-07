@@ -40,6 +40,7 @@ class TransportFile(yaml.YAMLObject):
 		for link in new.links:
 			if (link.id == old.id):
 				break
+		new.cost = link.cost # Posem el cost de transbord
 		new.links.remove(link)
 
 		# Ara, passem els links nous
@@ -61,6 +62,7 @@ class Station(yaml.YAMLObject):
 		super(Station, self).__init__()
 		self.id = int(id)
 		self.name = name
+		self.cost = 0 # cost de transbord
 		self.lines = [line]
 		self.x = int(x)
 		self.y = int(y)

@@ -62,6 +62,11 @@ class Map(QtGui.QDialog):
         newY = yMid-(y*self.MIDA_COORD) # No se perque ha de ser negatiu, pero si no surt al reves xD
         return newX,newY
 
+    def getLineColor(self,line):
+        colors = [QtCore.Qt.blue,QtCore.Qt.red,QtCore.Qt.green,QtCore.Qt.yellow,QtCore.Qt.cyan,QtCore.Qt.magenta]
+        return colors[self.trans.lines.index(line) % len(colors)]
+
+
     def drawStation(self,qp,st):
         ident = st.id
         x,y = self.transformStationCoords(st.x,st.y)
@@ -73,10 +78,10 @@ class Map(QtGui.QDialog):
         qp.drawText(x-self.MIDA_EST, y-self.MIDA_EST, str(ident)) # dibuixem ID
 
         # Ara, les connexions
-        qp.setPen(QtCore.Qt.blue)
         for link in st.links:
             otherSt = self.trans.getStationByID(link.id)
             oX,oY = self.transformStationCoords(otherSt.x,otherSt.y)
+            qp.setPen(self.getLineColor(st.getCommonLine(otherSt)))
             qp.drawLine(x,y,oX,oY)
 
         

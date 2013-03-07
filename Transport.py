@@ -36,13 +36,26 @@ class Transport(yaml.YAMLObject):
 				pass
 
 	def deleteLine(self,lin):
-		"""Esborra una linea"""
-		self.lines.remove(lin)
+		"""Esborra una linea, tambe de les estacions i els seus links"""
 		for st in self.stations:
-			try:
-				st.lines.remove(lin) # Si aqui falla vol dir que no existeix
-			except:
-				pass
+			if lin in st.lines:
+				# Esborrem els links d'aquella linea
+				for link in st.links:
+					otherSt = self.getStationByID(link.id)
+					if st.getCommonLine(otherSt) == lin: # Si estan relacionades per la linea que borrem...
+						otherSt.removeLinkToID(st.id) # borrem el link (a dues bandes)
+						st.removeLinkToID(otherSt.id)
+				st.lines.remove(lin) # eliminem la linea de l'estacio
+
+		self.lines.remove(lin) # eliminem la linea de les linies del fitxer
+
+	def deleteStation(self,st):
+		# Busquem les estacions que tenia linkades, i els hi borrem el link cap aquesta
+		for link in st.links:
+			otherSt = self.getStationByID(link.id)
+			otherSt.removeLinkToID(st.id)
+		self.stations.remove(st) #l'eliminem de la llista
+
 
 	def getNewStationID(self):
 		"""Retorna la ID que s'hauria d'assignar a una nova estacio"""
@@ -66,10 +79,11 @@ class Station(yaml.YAMLObject):
 	"""docstring for Station"""
 	#Definim quina etiqueta del fitxer yaml correspon als objectes d'aquesta classe
 	yaml_tag = u'!Station'
-	def __init__(self, id, name, lines, x, y, links):
+	def __init__(self, id, name, cost, lines, x, y, links):
 		super(Station, self).__init__()
 		self.id = int(id)
 		self.name = name
+		self.cost = cost
 		self.lines = lines
 		self.x = int(x)
 		self.y = int(y)
@@ -101,6 +115,14 @@ class Station(yaml.YAMLObject):
 				l = link
 				break
 		if l: self.links.remove(l)
+
+	def getCommonLine(self,st):
+		line = None
+		for l in self.lines:
+			if l in st.lines:
+				line = l
+				break
+		return line
 
 class Link(yaml.YAMLObject):
 	"""docstring for Link"""

@@ -1,18 +1,20 @@
 !TransportFile
-lines: [D, A, C, B, E]
+lines: [A, C, B, E]
 name: Lyon
 stations:
 - !Station
+  cost: 0
   id: 1
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 2, id: 2}
   name: GARE_VAISE
   x: -6
   y: 5
 - !Station
+  cost: 0
   id: 2
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 2, id: 1}
   - !Link {cost: 2, id: 3}
@@ -20,8 +22,9 @@ stations:
   x: -6
   y: 4
 - !Station
+  cost: 0
   id: 3
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 2, id: 2}
   - !Link {cost: 2, id: 4}
@@ -29,39 +32,29 @@ stations:
   x: -6
   y: 3
 - !Station
+  cost: 5
   id: 4
-  lines: [D, E]
+  lines: [E]
   links:
   - !Link {cost: 2, id: 3}
-  - !Link {cost: 3, id: 5}
   - !Link {cost: 2, id: 32}
   - !Link {cost: 1, id: 33}
   name: VIEUX_LYON
   x: -5
   y: 1
 - !Station
-  id: 5
-  lines: [D, A]
-  links:
-  - !Link {cost: 3, id: 4}
-  - !Link {cost: 2, id: 6}
-  - !Link {cost: 2, id: 19}
-  - !Link {cost: 1, id: 20}
-  name: BELLECOUR
-  x: -3
-  y: 1
-- !Station
+  cost: 0
   id: 6
-  lines: [D]
+  lines: []
   links:
-  - !Link {cost: 2, id: 5}
   - !Link {cost: 1, id: 7}
   name: GUILLOTIERE
   x: -1
   y: 0
 - !Station
+  cost: 7
   id: 7
-  lines: [D, B]
+  lines: [B]
   links:
   - !Link {cost: 1, id: 6}
   - !Link {cost: 3, id: 8}
@@ -72,8 +65,9 @@ stations:
   x: 0
   y: 0
 - !Station
+  cost: 0
   id: 8
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 3, id: 7}
   - !Link {cost: 1, id: 9}
@@ -81,8 +75,9 @@ stations:
   x: 3
   y: -1
 - !Station
+  cost: 0
   id: 9
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 1, id: 8}
   - !Link {cost: 1, id: 10}
@@ -90,8 +85,9 @@ stations:
   x: 4
   y: -1
 - !Station
+  cost: 0
   id: 10
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 1, id: 9}
   - !Link {cost: 2, id: 11}
@@ -99,8 +95,9 @@ stations:
   x: 5
   y: -2
 - !Station
+  cost: 0
   id: 11
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 2, id: 10}
   - !Link {cost: 2, id: 12}
@@ -108,8 +105,9 @@ stations:
   x: 5
   y: -3
 - !Station
+  cost: 0
   id: 12
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 2, id: 11}
   - !Link {cost: 2, id: 13}
@@ -117,14 +115,16 @@ stations:
   x: 5
   y: -4
 - !Station
+  cost: 0
   id: 13
-  lines: [D]
+  lines: []
   links:
   - !Link {cost: 2, id: 12}
   name: GARE_DE_VENISSEUX
   x: 5
   y: -5
 - !Station
+  cost: 0
   id: 14
   lines: [A]
   links:
@@ -133,6 +133,7 @@ stations:
   x: 8
   y: 3
 - !Station
+  cost: 0
   id: 15
   lines: [A]
   links:
@@ -142,6 +143,7 @@ stations:
   x: 3
   y: 4
 - !Station
+  cost: 7
   id: 16
   lines: [A, B]
   links:
@@ -152,6 +154,7 @@ stations:
   x: 2
   y: 5
 - !Station
+  cost: 0
   id: 17
   lines: [A]
   links:
@@ -161,6 +164,7 @@ stations:
   x: 0
   y: 4
 - !Station
+  cost: 6
   id: 18
   lines: [C, A]
   links:
@@ -171,24 +175,25 @@ stations:
   x: -3
   y: 3
 - !Station
+  cost: 0
   id: 19
   lines: [A]
   links:
-  - !Link {cost: 2, id: 5}
   - !Link {cost: 2, id: 18}
   name: CORDELIERS
   x: -3
   y: 2
 - !Station
+  cost: 0
   id: 20
   lines: [A]
   links:
   - !Link {cost: 2, id: 21}
-  - !Link {cost: 1, id: 5}
   name: AMPERE
   x: -3
   y: 0
 - !Station
+  cost: 0
   id: 21
   lines: [A]
   links:
@@ -197,6 +202,7 @@ stations:
   x: -3
   y: -1
 - !Station
+  cost: 0
   id: 22
   lines: [C]
   links:
@@ -205,6 +211,7 @@ stations:
   x: -2
   y: 7
 - !Station
+  cost: 0
   id: 23
   lines: [C]
   links:
@@ -214,6 +221,7 @@ stations:
   x: -2
   y: 6
 - !Station
+  cost: 0
   id: 24
   lines: [C]
   links:
@@ -223,6 +231,7 @@ stations:
   x: -3
   y: 5
 - !Station
+  cost: 0
   id: 25
   lines: [B]
   links:
@@ -232,6 +241,7 @@ stations:
   x: 1
   y: 3
 - !Station
+  cost: 0
   id: 26
   lines: [B]
   links:
@@ -241,6 +251,7 @@ stations:
   x: 1
   y: 2
 - !Station
+  cost: 0
   id: 27
   lines: [B]
   links:
@@ -251,6 +262,7 @@ stations:
   x: 1
   y: 0
 - !Station
+  cost: 0
   id: 28
   lines: [B]
   links:
@@ -260,6 +272,7 @@ stations:
   x: 0
   y: -2
 - !Station
+  cost: 0
   id: 29
   lines: [B]
   links:
@@ -269,6 +282,7 @@ stations:
   x: 0
   y: -3
 - !Station
+  cost: 0
   id: 30
   lines: [B]
   links:
@@ -278,6 +292,7 @@ stations:
   x: 0
   y: -4
 - !Station
+  cost: 0
   id: 31
   lines: [B]
   links:
@@ -286,6 +301,7 @@ stations:
   x: 0
   y: -5
 - !Station
+  cost: 0
   id: 32
   lines: [E]
   links:
@@ -294,6 +310,7 @@ stations:
   x: -5
   y: -1
 - !Station
+  cost: 0
   id: 33
   lines: [E]
   links:
@@ -303,6 +320,7 @@ stations:
   x: -5
   y: -3
 - !Station
+  cost: 0
   id: 34
   lines: [E]
   links:

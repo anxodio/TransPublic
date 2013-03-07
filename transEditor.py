@@ -165,12 +165,20 @@ class TransEditor(QtGui.QMainWindow):
 
 	def addStation(self):
 		ident = self.trans.getNewStationID()
-		st = Transport.Station(ident, "", [], 0, 0, [])
+		st = Transport.Station(ident, "", 0, [], 0, 0, [])
 		self.trans.stations.append(st)
 		self.editStation(ident)
 
 	def delStation(self):
-		print "NO PER ARA!"
+		table = self.ui.tableStations
+		row = table.currentRow()
+		if row == -1:
+			return
+
+		ret = QtGui.QMessageBox.warning(self, "Avis", u"Segur que vols esborrar l'Estació'?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.Cancel)
+		if ret == QtGui.QMessageBox.Yes:
+			self.trans.deleteStation(self.trans.getStationByID(int(table.item(row,0).text()))) # l'eliminem del arxiu en memoria
+			table.removeRow(row) # l'eliminem del control grafic
 
 	def editStation_clicked(self):
 		# Al apretar boto
@@ -195,6 +203,7 @@ class TransEditor(QtGui.QMainWindow):
 			d.inputStationName.setText(st.name)
 			d.inputX.setValue(st.x)
 			d.inputY.setValue(st.y)
+			d.inputCostT.setValue(st.cost)
 			self.loadStationLines(st)
 			self.loadStationLinks(st)
 			d.show()
@@ -220,27 +229,38 @@ class TransEditor(QtGui.QMainWindow):
 			table.setItem(row,0,QtGui.QTableWidgetItem(str(link.id)))
 			table.setItem(row,1,QtGui.QTableWidgetItem(str(link.cost)))
 
-	def podemMoureLinies(self):
+	def podemTreureLinia(self,ident,line):
 		# Basicament, no ens deixara moure lines mentre hi hagi connexions fetes.
-		# Per tant, si volem moure linies, primer eliminem les connexions i ja les tornarem a fer.
+		# Per tant, si treure una linia, primer eliminem les connexions d'aquella linea.
 		ok = True
 		table = self.stDialog.ui.tableLinks
-		if not table.rowCount() == 0:
-			ok = False
-			QtGui.QMessageBox.warning(self, "Error", u"No es permeten modificar línies mentre existeixin connexions", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+		st = self.trans.getStationByID(ident)
+
+		for i in range(table.rowCount()):
+			otherId = int(table.item(i,0).text())
+			if st.getCommonLine(self.trans.getStationByID(otherId)) == line:
+				QtGui.QMessageBox.warning(self, "Error", u"No pots treure una línea mentre tingui connexions assignades", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+				ok = False
+				break
+		
 		return ok
 
 	def upLine(self):
-		if not self.podemMoureLinies(): return
+		""" Assignar una nova linea """
 		lOthers = self.stDialog.ui.listLinesOthers
+		if lOthers.currentRow() == -1: return # No hi ha cap seleccionada
+
 		lAct = self.stDialog.ui.listLinesAct
 		item = lOthers.takeItem(lOthers.currentRow())
 		if item:
 			lAct.addItem(item)
 
 	def downLine(self):
-		if not self.podemMoureLinies(): return
+		""" Treure una linea. Nomes podem si no te cap link assignat """
 		lAct = self.stDialog.ui.listLinesAct
+		if lAct.currentRow() == -1: return # No hi ha cap seleccionada
+		if not self.podemTreureLinia(int(self.stDialog.ui.inputID.value()),lAct.currentItem().text()): return
+		
 		lOthers = self.stDialog.ui.listLinesOthers
 		item = lAct.takeItem(lAct.currentRow())
 		if item:
@@ -311,6 +331,7 @@ class TransEditor(QtGui.QMainWindow):
 		st.name = str(d.inputStationName.text())
 		st.x = int(d.inputX.value()) #TODO: Comprovar que no coincideixi amb una altre
 		st.y = int(d.inputY.value())
+		st.cost = int(d.inputCostT.value())
 
 		# Linies: Les posem de nou
 		lines = []
