@@ -228,17 +228,15 @@ class TransEditor(QtGui.QMainWindow):
 			table.insertRow(row)
 			table.setItem(row,0,QtGui.QTableWidgetItem(str(link.id)))
 			table.setItem(row,1,QtGui.QTableWidgetItem(str(link.cost)))
+			table.setItem(row,2,QtGui.QTableWidgetItem(str(link.line)))
 
 	def podemTreureLinia(self,ident,line):
 		# Basicament, no ens deixara moure lines mentre hi hagi connexions fetes.
 		# Per tant, si treure una linia, primer eliminem les connexions d'aquella linea.
 		ok = True
 		table = self.stDialog.ui.tableLinks
-		st = self.trans.getStationByID(ident)
-
 		for i in range(table.rowCount()):
-			otherId = int(table.item(i,0).text())
-			if st.getCommonLine(self.trans.getStationByID(otherId)) == line:
+			if table.item(i,2).text() == line:
 				QtGui.QMessageBox.warning(self, "Error", u"No pots treure una línea mentre tingui connexions assignades", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				ok = False
 				break
@@ -297,8 +295,7 @@ class TransEditor(QtGui.QMainWindow):
 			# Comprovem que no estem ficant mes de dos links a la mateixa linea (en actual)
 			cont = 0
 			for i in range(d.tableLinks.rowCount()):
-				tmpSt = self.trans.getStationByID(int(d.tableLinks.item(i,0).text())) # agafem cada ID a la taula de links
-				if lineRelation in tmpSt.lines: cont += 1 # Mirem si te la linea
+				if lineRelation == d.tableLinks.item(i,2).text(): cont += 1
 			if cont >= 2:
 				QtGui.QMessageBox.warning(self, "Error", u"Ja tens dos connexions a la línea "+lineRelation, QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				return
@@ -307,7 +304,7 @@ class TransEditor(QtGui.QMainWindow):
 			cont = 0
 			for link in linkSt.links: # mirem cadascun dels seus links
 				# Si la linea d'aquells links es la mateixa que tenim, sumem
-				if lineRelation == linkSt.getCommonLine(self.trans.getStationByID(link.id)): cont += 1
+				if lineRelation == link.line: cont += 1
 			if cont >= 2:
 				QtGui.QMessageBox.warning(self, "Error", u"L'estació amb la que vols fer la connexió ja té dos connexions a la línea "+lineRelation, QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				return
@@ -319,6 +316,7 @@ class TransEditor(QtGui.QMainWindow):
 				d.tableLinks.insertRow(row)
 				d.tableLinks.setItem(row,0,QtGui.QTableWidgetItem(str(linkID)))
 				d.tableLinks.setItem(row,1,QtGui.QTableWidgetItem(str(cost)))
+				d.tableLinks.setItem(row,2,QtGui.QTableWidgetItem(str(lineRelation)))
 
 	def editLink(self,row=None,col=None):
 		d = self.stDialog.ui
@@ -372,7 +370,8 @@ class TransEditor(QtGui.QMainWindow):
 		# Links: Els posem de nou, però hem de mantenir la relacio a l'altre banda
 		links = []
 		for i in range(d.tableLinks.rowCount()):
-			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()))) # tupla amb id,cost
+			# tupla amb id,cost, line
+			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()),d.tableLinks.item(i,2).text()))
 		st.reloadLinks(self.trans,links)
 
 		d.done(1)

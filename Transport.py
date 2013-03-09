@@ -7,10 +7,9 @@ class Transport(yaml.YAMLObject):
 	"""docstring for Contenidor"""
 	#Definim quina etiqueta del fitxer yaml correspon als objectes d'aquesta classe
 	yaml_tag = u'!TransportFile'
-	def __init__(self,name,type,lines,stations):
+	def __init__(self,name,lines,stations):
 		super(Transport, self).__init__()
 		self.name = name
-		self.type = type
 		self.lines = lines
 		self.stations = stations
 
@@ -50,10 +49,11 @@ class Transport(yaml.YAMLObject):
 			"""docstring for Link"""
 			#Definim quina etiqueta del fitxer yaml correspon als objectes d'aquesta classe
 			yaml_tag = u'!Link'
-			def __init__(self, id, cost):
+			def __init__(self, id, cost, line=""):
 				super(Transport.Station.Link, self).__init__()
 				self.id = int(id)
 				self.cost = int(cost)
+				self.line = line
 
 	@staticmethod
 	def loadFile(fitxer):
