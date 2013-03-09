@@ -63,7 +63,7 @@ class Map(QtGui.QDialog):
         return newX,newY
 
     def getLineColor(self,line):
-        colors = [QtCore.Qt.blue,QtCore.Qt.red,QtCore.Qt.green,QtCore.Qt.yellow,QtCore.Qt.cyan,QtCore.Qt.magenta]
+        colors = [QtCore.Qt.darkGreen,QtCore.Qt.red,QtCore.Qt.yellow,QtCore.Qt.blue,QtCore.Qt.green,QtCore.Qt.magenta,QtCore.Qt.cyan]
         return colors[self.trans.lines.index(line) % len(colors)]
 
 

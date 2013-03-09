@@ -72,7 +72,6 @@ stations:
   links:
   - !Link {cost: 1, id: 6}
   - !Link {cost: 3, id: 8}
-  - !Link {cost: 1, id: 27}
   - !Link {cost: 2, id: 27}
   - !Link {cost: 2, id: 28}
   name: SAXE-GAMBETTA
@@ -164,6 +163,8 @@ stations:
   - !Link {cost: 1, id: 15}
   - !Link {cost: 1, id: 17}
   - !Link {cost: 2, id: 25}
+  - !Link {cost: 0, id: 16}
+  - !Link {cost: 0, id: 16}
   name: CHARPENNES
   x: 2
   y: 5
@@ -271,7 +272,6 @@ stations:
   id: 27
   lines: [B]
   links:
-  - !Link {cost: 1, id: 7}
   - !Link {cost: 1, id: 26}
   - !Link {cost: 2, id: 7}
   name: PLACE_GUICHAR
@@ -324,7 +324,7 @@ stations:
   - !Link {cost: 2, id: 4}
   name: FOURVIERE
   x: -5
-  y: -1
+  y: 2
 - !Station
   cost: 0
   id: 33
