@@ -9,9 +9,17 @@ class TransportFile(yaml.YAMLObject):
 	def __init__(self):
 		super(TransportFile, self).__init__()
 		self.name = "Lyon"
-		self.type = "Metro"
 		self.lines = []
 		self.stations = []
+
+	def getStationByID(self,ident):
+		station = None
+		for st in self.stations:
+			if st.id == ident: 
+				station = st
+				break
+
+		return station
 
 	def addStation(self, id, name, line, x, y, links):
 		st = Station(id, name, line, x, y)
@@ -54,7 +62,6 @@ class TransportFile(yaml.YAMLObject):
 					link.id = new.id
 
 
-
 class Station(yaml.YAMLObject):
 	"""docstring for Station"""
 	yaml_tag = u'!Station'
@@ -71,6 +78,14 @@ class Station(yaml.YAMLObject):
 	def addLink(self,link):
 		self.links.append(link)
 
+	def getCommonLine(self,st):
+		line = None
+		for l in self.lines:
+			if l in st.lines:
+				line = l
+				break
+		return line
+
 class Link(yaml.YAMLObject):
 	"""docstring for Link"""
 	yaml_tag = u'!Link'
@@ -78,6 +93,7 @@ class Link(yaml.YAMLObject):
 		super(Link, self).__init__()
 		self.id = int(id)
 		self.cost = int(cost)
+		self.line = "" # les posem al final
 
 def netejaRedundancies(tF):
 	senseRepetir = []
@@ -95,7 +111,11 @@ def netejaRedundancies(tF):
 	for st in repetides:
 		tF.stations.remove(st)
 
-
+def addLinesToLinks(tF):
+	for st in tF.stations:
+		for link in st.links:
+			line = st.getCommonLine(tF.getStationByID(link.id))
+			link.line = line
 
 def main():
 	tF = TransportFile()
@@ -108,6 +128,7 @@ def main():
 		tF.addStation(sep[0],sep[1],sep[2],sep[3],sep[4].rsplit(' ')[0],f2r[i])
 
 	netejaRedundancies(tF)
+	addLinesToLinks(tF)
 	stream = file('lyon.yaml', 'w')
 	yaml.dump(tF,stream)
 	print yaml.dump(tF)

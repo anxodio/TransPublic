@@ -264,6 +264,11 @@
            <string>Cost</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>Línia</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>

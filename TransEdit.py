@@ -67,13 +67,13 @@ class TransEdit(Transport):
 
 			# Ara, posem els nous links
 			for link in links:
-				self.addLink(link[0],link[1]) # Ens afegim el link
+				self.addLink(link[0],link[1],link[2]) # Ens afegim el link
 				stLinked = trans.getStationByID(link[0])
-				stLinked.addLink(self.id,link[1]) # L'afegim a l'altre banda
+				stLinked.addLink(self.id,link[1],link[2]) # L'afegim a l'altre banda
 
-		def addLink(self,ident,cost):
+		def addLink(self,ident,cost,line):
 			# Si tenim un link cap a aquest ID, l'eliminem
-			l = self.Link(ident,cost)
+			l = self.Link(ident,cost,line)
 			self.links.append(l)
 
 		def removeLinkToID(self,ident):

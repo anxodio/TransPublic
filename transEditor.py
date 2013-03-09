@@ -228,17 +228,15 @@ class TransEditor(QtGui.QMainWindow):
 			table.insertRow(row)
 			table.setItem(row,0,QtGui.QTableWidgetItem(str(link.id)))
 			table.setItem(row,1,QtGui.QTableWidgetItem(str(link.cost)))
+			table.setItem(row,2,QtGui.QTableWidgetItem(str(link.line)))
 
 	def podemTreureLinia(self,ident,line):
 		# Basicament, no ens deixara moure lines mentre hi hagi connexions fetes.
 		# Per tant, si treure una linia, primer eliminem les connexions d'aquella linea.
 		ok = True
 		table = self.stDialog.ui.tableLinks
-		st = self.trans.getStationByID(ident)
-
 		for i in range(table.rowCount()):
-			otherId = int(table.item(i,0).text())
-			if st.getCommonLine(self.trans.getStationByID(otherId)) == line:
+			if table.item(i,2).text() == line:
 				QtGui.QMessageBox.warning(self, "Error", u"No pots treure una línea mentre tingui connexions assignades", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				ok = False
 				break
@@ -271,27 +269,45 @@ class TransEditor(QtGui.QMainWindow):
 		ident = int(d.inputID.value())
 		linkID, ok = QtGui.QInputDialog.getInt(self, u'Nova Connexió', u"Entra l'ID de l'Estació:",0,0,99)
 		if ok:
-			# Comprovem
+			# Comprovem si el id que ens han posat existeix
 			linkSt = self.trans.getStationByID(linkID)
 			if not linkSt:
 				QtGui.QMessageBox.warning(self, "Error", u"La estació indicada no existeix", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				return
 
+			# Comprovem si el id és el mateix que el nostre
 			if linkSt.id == ident:
 				QtGui.QMessageBox.warning(self, "Error", u"No es pot fer una connexió a la mateixa estació", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				return
 
-			lineRelation = False # Ha d'existir alguna relacio entre les linies
+			# Ha d'existir alguna relacio entre les linies
+			# No fem servir el getCommonLines degut a que encara no tenim les lines al objecte, sino al control listLinesAct
+			lineRelation = False 
 			for i in range(d.listLinesAct.count()):
 				line = str(d.listLinesAct.item(i).text())
 				if line in linkSt.lines:
-					lineRelation = True
+					lineRelation = line
 
 			if not lineRelation:
 				QtGui.QMessageBox.warning(self, "Error", u"La estació indicada no té cap de les línies d'aquesta", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
 				return
 
-			# TODO: Comprovar que no hi hagin més de 2 relacions cap a la mateixa linia
+			# Comprovem que no estem ficant mes de dos links a la mateixa linea (en actual)
+			cont = 0
+			for i in range(d.tableLinks.rowCount()):
+				if lineRelation == d.tableLinks.item(i,2).text(): cont += 1
+			if cont >= 2:
+				QtGui.QMessageBox.warning(self, "Error", u"Ja tens dos connexions a la línea "+lineRelation, QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+				return
+
+			# Ara, el mateix amb l'altre banda
+			cont = 0
+			for link in linkSt.links: # mirem cadascun dels seus links
+				# Si la linea d'aquells links es la mateixa que tenim, sumem
+				if lineRelation == link.line: cont += 1
+			if cont >= 2:
+				QtGui.QMessageBox.warning(self, "Error", u"L'estació amb la que vols fer la connexió ja té dos connexions a la línea "+lineRelation, QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+				return
 
 			# Tot comprovat
 			cost, ok2 = QtGui.QInputDialog.getInt(self, u'Nova Connexió', u"Entra el cost:",0,0,99)
@@ -300,6 +316,7 @@ class TransEditor(QtGui.QMainWindow):
 				d.tableLinks.insertRow(row)
 				d.tableLinks.setItem(row,0,QtGui.QTableWidgetItem(str(linkID)))
 				d.tableLinks.setItem(row,1,QtGui.QTableWidgetItem(str(cost)))
+				d.tableLinks.setItem(row,2,QtGui.QTableWidgetItem(str(lineRelation)))
 
 	def editLink(self,row=None,col=None):
 		d = self.stDialog.ui
@@ -327,10 +344,21 @@ class TransEditor(QtGui.QMainWindow):
 	def saveStation(self):
 		d = self.stDialog.ui
 		ident = int(d.inputID.value())
+		x = int(d.inputX.value())
+		y = int(d.inputY.value())
+
+		# Comprovem que les coordenades no coincideixin amb una altre
+		for otherSt in self.trans.stations:
+			if otherSt.id == ident: continue
+			if otherSt.x == x and otherSt.y == y:
+				QtGui.QMessageBox.warning(self, "Error", u"Ja existeix una altre estació en aquestes coordenades.", QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+				return
+
+		# Posem les noves dades al objecte Estació
 		st = self.trans.getStationByID(ident)
 		st.name = str(d.inputStationName.text())
-		st.x = int(d.inputX.value()) #TODO: Comprovar que no coincideixi amb una altre
-		st.y = int(d.inputY.value())
+		st.x = x
+		st.y = y
 		st.cost = int(d.inputCostT.value())
 
 		# Linies: Les posem de nou
@@ -342,7 +370,8 @@ class TransEditor(QtGui.QMainWindow):
 		# Links: Els posem de nou, però hem de mantenir la relacio a l'altre banda
 		links = []
 		for i in range(d.tableLinks.rowCount()):
-			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()))) # tupla amb id,cost
+			# tupla amb id,cost, line
+			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()),d.tableLinks.item(i,2).text()))
 		st.reloadLinks(self.trans,links)
 
 		d.done(1)
