@@ -1,11 +1,11 @@
 !TransportFile
-lines: [A, C, B, E]
+lines: [D, A, C, B, E, Z]
 name: Lyon
 stations:
 - !Station
   cost: 0
   id: 1
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 2, id: 2}
   name: GARE_VAISE
@@ -14,7 +14,7 @@ stations:
 - !Station
   cost: 0
   id: 2
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 2, id: 1}
   - !Link {cost: 2, id: 3}
@@ -24,7 +24,7 @@ stations:
 - !Station
   cost: 0
   id: 3
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 2, id: 2}
   - !Link {cost: 2, id: 4}
@@ -34,19 +34,33 @@ stations:
 - !Station
   cost: 5
   id: 4
-  lines: [E]
+  lines: [D, E]
   links:
   - !Link {cost: 2, id: 3}
+  - !Link {cost: 3, id: 5}
   - !Link {cost: 2, id: 32}
   - !Link {cost: 1, id: 33}
   name: VIEUX_LYON
   x: -5
   y: 1
 - !Station
+  cost: 3
+  id: 5
+  lines: [D, A]
+  links:
+  - !Link {cost: 3, id: 4}
+  - !Link {cost: 2, id: 6}
+  - !Link {cost: 2, id: 19}
+  - !Link {cost: 1, id: 20}
+  name: BELLECOUR
+  x: -3
+  y: 1
+- !Station
   cost: 0
   id: 6
-  lines: []
+  lines: [D]
   links:
+  - !Link {cost: 2, id: 5}
   - !Link {cost: 1, id: 7}
   name: GUILLOTIERE
   x: -1
@@ -54,11 +68,10 @@ stations:
 - !Station
   cost: 7
   id: 7
-  lines: [B]
+  lines: [D, B]
   links:
   - !Link {cost: 1, id: 6}
   - !Link {cost: 3, id: 8}
-  - !Link {cost: 1, id: 27}
   - !Link {cost: 2, id: 27}
   - !Link {cost: 2, id: 28}
   name: SAXE-GAMBETTA
@@ -67,7 +80,7 @@ stations:
 - !Station
   cost: 0
   id: 8
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 3, id: 7}
   - !Link {cost: 1, id: 9}
@@ -77,7 +90,7 @@ stations:
 - !Station
   cost: 0
   id: 9
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 1, id: 8}
   - !Link {cost: 1, id: 10}
@@ -87,27 +100,28 @@ stations:
 - !Station
   cost: 0
   id: 10
-  lines: []
+  lines: [D, Z]
   links:
   - !Link {cost: 1, id: 9}
   - !Link {cost: 2, id: 11}
+  - !Link {cost: 8, id: 14}
   name: LAENNEC
   x: 5
   y: -2
 - !Station
   cost: 0
   id: 11
-  lines: []
+  lines: [D]
   links:
-  - !Link {cost: 2, id: 10}
   - !Link {cost: 2, id: 12}
+  - !Link {cost: 2, id: 10}
   name: MERMOZ-PINEL
   x: 5
   y: -3
 - !Station
   cost: 0
   id: 12
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 2, id: 11}
   - !Link {cost: 2, id: 13}
@@ -117,7 +131,7 @@ stations:
 - !Station
   cost: 0
   id: 13
-  lines: []
+  lines: [D]
   links:
   - !Link {cost: 2, id: 12}
   name: GARE_DE_VENISSEUX
@@ -126,9 +140,10 @@ stations:
 - !Station
   cost: 0
   id: 14
-  lines: [A]
+  lines: [A, Z]
   links:
   - !Link {cost: 4, id: 15}
+  - !Link {cost: 8, id: 10}
   name: LAURENT_BONNEVAY
   x: 8
   y: 3
@@ -137,8 +152,8 @@ stations:
   id: 15
   lines: [A]
   links:
-  - !Link {cost: 4, id: 14}
   - !Link {cost: 1, id: 16}
+  - !Link {cost: 4, id: 14}
   name: REPUBLIQUE
   x: 3
   y: 4
@@ -150,6 +165,8 @@ stations:
   - !Link {cost: 1, id: 15}
   - !Link {cost: 1, id: 17}
   - !Link {cost: 2, id: 25}
+  - !Link {cost: 0, id: 16}
+  - !Link {cost: 0, id: 16}
   name: CHARPENNES
   x: 2
   y: 5
@@ -179,6 +196,7 @@ stations:
   id: 19
   lines: [A]
   links:
+  - !Link {cost: 2, id: 5}
   - !Link {cost: 2, id: 18}
   name: CORDELIERS
   x: -3
@@ -189,6 +207,7 @@ stations:
   lines: [A]
   links:
   - !Link {cost: 2, id: 21}
+  - !Link {cost: 1, id: 5}
   name: AMPERE
   x: -3
   y: 0
@@ -255,7 +274,6 @@ stations:
   id: 27
   lines: [B]
   links:
-  - !Link {cost: 1, id: 7}
   - !Link {cost: 1, id: 26}
   - !Link {cost: 2, id: 7}
   name: PLACE_GUICHAR
@@ -308,7 +326,7 @@ stations:
   - !Link {cost: 2, id: 4}
   name: FOURVIERE
   x: -5
-  y: -1
+  y: 2
 - !Station
   cost: 0
   id: 33

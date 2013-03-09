@@ -5,7 +5,7 @@ import sys
 import yaml
 from PyQt4 import QtGui, QtCore, uic
 
-import Transport
+from TransEdit import TransEdit
 import viewer
 
 class TransEditor(QtGui.QMainWindow):
@@ -76,7 +76,7 @@ class TransEditor(QtGui.QMainWindow):
 	def newFile(self):
 		"""Funció per crear un nou fitxer"""
 		if not self.comprovaCreat(): return
-		self.trans = Transport.Transport("","Metro",[],[])
+		self.trans = TransEdit("","Metro",[],[])
 		self.loadLines()
 		self.loadStations()
 		self.unLockForm()
@@ -87,7 +87,7 @@ class TransEditor(QtGui.QMainWindow):
 		fitxer = QtGui.QFileDialog.getOpenFileName(self, "Selecciona un fitxer de Transport", ".", "*.yaml")
 		if not fitxer or fitxer == "": return
 		self.setLastFileName(str(fitxer))
-		self.trans = Transport.loadFile(str(fitxer))
+		self.trans = TransEdit.loadFile(str(fitxer))
 		self.loadLines()
 		self.loadStations()
 		self.ui.inputNom.setText(self.trans.name)
@@ -100,7 +100,7 @@ class TransEditor(QtGui.QMainWindow):
 			return
 
 		self.trans.name = str(self.ui.inputNom.text())
-		Transport.saveFile(self.trans,self.lastFileName)
+		TransEdit.saveFile(self.trans,self.lastFileName)
 
 	def saveFileAs(self):
 		if not self.trans: return # No hi ha res a guardar
@@ -165,7 +165,7 @@ class TransEditor(QtGui.QMainWindow):
 
 	def addStation(self):
 		ident = self.trans.getNewStationID()
-		st = Transport.Station(ident, "", 0, [], 0, 0, [])
+		st = TransEdit.StationEdit(ident, "", 0, [], 0, 0, [])
 		self.trans.stations.append(st)
 		self.editStation(ident)
 
