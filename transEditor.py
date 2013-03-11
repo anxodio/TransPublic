@@ -59,7 +59,7 @@ class TransEditor(QtGui.QMainWindow):
 
 	def genMap(self):
 		if self.trans:
-			viewer.Map(self,self.trans)
+			viewer.Viewer(self,self.trans)
 
 	def comprovaCreat(self):
 		ok = True
