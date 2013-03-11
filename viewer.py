@@ -10,11 +10,31 @@ class Viewer(QtGui.QDialog):
         super(Viewer, self).__init__(parent)
         self.trans = trans
         self.ui = uic.loadUi('viewer.ui')
+
+        # Preparem el Frame del mapa i el posem al form
         self.mF = Viewer.Map(trans)
         lay = QtGui.QGridLayout()
         lay.addWidget(self.mF)
         self.ui.mapGruopBox.setLayout(lay)
+
+        self.loadLines()
+        self.loadStations()
+
         self.ui.show()
+
+    def loadLines(self):
+        """Omple el QListWidget viewerListLines amb les linies de transport"""
+        l = self.ui.viewerListLines
+        l.clear()
+        for line in self.trans.lines:
+            l.addItem(line)
+
+    def loadStations(self):
+        """Omple el QListWidget viewerListStations amb les estacions"""
+        l = self.ui.viewerListStations
+        l.clear()
+        for st in self.trans.stations:
+            l.addItem(str(st.id)+" "+st.name)
         
 
     class Map(QtGui.QFrame):  
