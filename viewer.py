@@ -12,7 +12,7 @@ class Viewer(QtGui.QDialog):
         self.ui = uic.loadUi('viewer.ui')
 
         # Preparem el Frame del mapa i el posem al form
-        self.mF = Viewer.Map(trans)
+        self.mF = Viewer.Map(self,trans)
         lay = QtGui.QGridLayout()
         lay.addWidget(self.mF)
         self.ui.mapGruopBox.setLayout(lay)
@@ -27,7 +27,10 @@ class Viewer(QtGui.QDialog):
         l = self.ui.viewerListLines
         l.clear()
         for line in self.trans.lines:
-            l.addItem(line)
+            item = QtGui.QListWidgetItem(line,l) # text,parent
+            brush = QtGui.QBrush(self.getLineColor(line)) # per la font dels elements de la llista
+            item.setForeground(brush)
+            l.addItem(item)
 
     def loadStations(self):
         """Omple el QListWidget viewerListStations amb les estacions"""
@@ -35,14 +38,19 @@ class Viewer(QtGui.QDialog):
         l.clear()
         for st in self.trans.stations:
             l.addItem(str(st.id)+" "+st.name)
+
+    def getLineColor(self,line):
+        colors = [QtCore.Qt.darkGreen,QtCore.Qt.red,QtCore.Qt.yellow,QtCore.Qt.blue,QtCore.Qt.green,QtCore.Qt.magenta,QtCore.Qt.cyan]
+        return colors[self.trans.lines.index(line) % len(colors)]
         
 
     class Map(QtGui.QFrame):  
         MIDA_COORD = 32 # constant per mida d'una coordenada
         MIDA_EST = 12 # constant per mida del punt de l'estacio (mes petit que la coordenada, perque no s'enganxin)
 
-        def __init__(self,trans):
+        def __init__(self,parent,trans):
             super(Viewer.Map, self).__init__()
+            self.parent = parent # guardem el parent per poder fer servir funcions comuns, com getLineColor
             self.trans = trans
             self.initUI()
 
@@ -93,10 +101,6 @@ class Viewer(QtGui.QDialog):
             newY = self.vYMid-(y*self.MIDA_COORD) # No se perque ha de ser negatiu, pero si no surt al reves xD
             return newX,newY
 
-        def getLineColor(self,line):
-            colors = [QtCore.Qt.darkGreen,QtCore.Qt.red,QtCore.Qt.yellow,QtCore.Qt.blue,QtCore.Qt.green,QtCore.Qt.magenta,QtCore.Qt.cyan]
-            return colors[self.trans.lines.index(line) % len(colors)]
-
         def drawStation(self,qp,st):
             ident = st.id
             x,y = self.transformStationCoords(st.x,st.y)
@@ -111,7 +115,7 @@ class Viewer(QtGui.QDialog):
             for link in st.links:
                 otherSt = self.trans.getStationByID(link.id)
                 oX,oY = self.transformStationCoords(otherSt.x,otherSt.y)
-                qp.setPen(self.getLineColor(st.getCommonLine(otherSt)))
+                qp.setPen(self.parent.getLineColor(st.getCommonLine(otherSt)))
                 qp.drawLine(x,y,oX,oY)
 
             
