@@ -36,11 +36,34 @@ class Map(QtGui.QDialog):
             if st.y > maxY: maxY = st.y
             if st.y < minY: minY = st.y
 
-        width = (maxX + minX*-1)*self.MIDA_COORD # es dona per soposat que els minims son negatius
-        height = (maxY + minY*-1)*self.MIDA_COORD
+        print "x: ",maxX,minX
+        print "y: ",maxY,minY
 
-        width += 4*self.MIDA_COORD # una mica mes gran, per si les mosques
-        height += 4*self.MIDA_COORD
+        distX = maxX + minX*-1
+        distY = maxY + minY*-1
+
+        print "distx",distX
+        print "disty",distY
+
+        width = distX*self.MIDA_COORD # La distacia d'una banda a una altre
+        height = distY*self.MIDA_COORD
+
+        print "width",width
+        print "height",height
+
+        width += 2*self.MIDA_COORD # una mica mes gran, perque no quedi enganxat
+        height += 2*self.MIDA_COORD
+
+        # Per saber el centre des d'on hem de pintar, ho hem de fer relatiu als maxims i minims,
+        # ja que pot ser que el maxim sigui 8 i el minim -3, i per tant el 0 no hauria d'estar al
+        # mig del mapa, perquè la part d'adalt no ens cabria amb les mides que hem posat
+        xMid = maxX - (distX/2)
+        yMid = maxY - (distY/2)
+        self.vXMid = (width/2)-(xMid*self.MIDA_COORD) # Meitat virtual en amplada
+        self.vYMid = (height/2)+(yMid*self.MIDA_COORD) # Meitat virtual en altura
+
+        print "self.vXMid",self.vXMid
+        print "self.vYMid",self.vYMid
 
         self.setGeometry(300, 300, width, height)
         self.setWindowTitle('Mapa')
@@ -55,11 +78,8 @@ class Map(QtGui.QDialog):
     def transformStationCoords(self,x,y):
         # Per agafar el PUNT central d'una coordenada, aconseguim el del mitg del mapa,
         # i ens movem
-        size = self.size()
-        xMid = size.width()/2
-        yMid = size.height()/2
-        newX = xMid+(x*self.MIDA_COORD)
-        newY = yMid-(y*self.MIDA_COORD) # No se perque ha de ser negatiu, pero si no surt al reves xD
+        newX = self.vXMid+(x*self.MIDA_COORD)
+        newY = self.vYMid-(y*self.MIDA_COORD) # No se perque ha de ser negatiu, pero si no surt al reves xD
         return newX,newY
 
     def getLineColor(self,line):
