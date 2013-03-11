@@ -34,8 +34,8 @@ def cercaA(arrel, objectiu):
 		cami = llista.pop(0)
 		cami_exp = expandirCami(cami)
 		cami_exp = eliminarCicles(cami_exp)
-		cami_exp = eliminarCaminsRedundants(llista)
 		#TO DO: insertar cami_exp a llista
+		llista = eliminarCaminsRedundants(llista)
 
 # INNECESSARIA
 def isInCami(estacio, cami):
