@@ -311,6 +311,7 @@ stations:
   lines: [B]
   links:
   - !Link {cost: 2, id: 30, line: B}
+  - !Link {cost: 5, id: 35, line: B}
   name: STADE_DE_GERLAND
   x: 0
   y: -5
@@ -342,3 +343,12 @@ stations:
   name: ST JUST
   x: -5
   y: -4
+- !Station
+  cost: 0
+  id: 35
+  lines: [B]
+  links:
+  - !Link {cost: 5, id: 31, line: B}
+  name: PROVA
+  x: 4
+  y: -5

@@ -371,7 +371,7 @@ class TransEditor(QtGui.QMainWindow):
 		links = []
 		for i in range(d.tableLinks.rowCount()):
 			# tupla amb id,cost, line
-			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()),d.tableLinks.item(i,2).text()))
+			links.append((int(d.tableLinks.item(i,0).text()),int(d.tableLinks.item(i,1).text()),str(d.tableLinks.item(i,2).text())))
 		st.reloadLinks(self.trans,links)
 
 		d.done(1)

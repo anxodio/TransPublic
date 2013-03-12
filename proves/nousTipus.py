@@ -30,7 +30,7 @@ def calcDistance(coord1, coord2):
 	"""Calcula la distancia entre dues posicions del mapa"""
 	#coord1 i coord2 son una tupla amb 2 camps: (x, y)
 	dist = math.sqrt( pow((coord1[0]-coord2[0]),2) + pow((coord1[1]-coord2[1]),2))
-	return dist
+	return int(dist)
 
 class AStarList(object):
 	# Constants per l'origen del element

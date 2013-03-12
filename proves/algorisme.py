@@ -225,8 +225,8 @@ def provaExpCami():
 		#print llista[0][0].name, llista[1][0].name
 
 def provainsertOrdenat():
-	arrel = trans.getStationByID(4)
-	objectiu = trans.getStationByID(16)
+	arrel = trans.getStationByID(13)
+	objectiu = trans.getStationByID(35)
 
 	"""
 	l = AStarList(arrel, objectiu)
