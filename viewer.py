@@ -3,6 +3,7 @@
 
 import sys, random
 from PyQt4 import QtGui, QtCore, uic
+from TransEdit import TransEdit
 
 class Viewer(QtGui.QDialog):
 
@@ -46,7 +47,7 @@ class Viewer(QtGui.QDialog):
 
     class Map(QtGui.QFrame):  
         MIDA_COORD = 32 # constant per mida d'una coordenada
-        MIDA_EST = 12 # constant per mida del punt de l'estacio (mes petit que la coordenada, perque no s'enganxin)
+        MIDA_EST = 14 # constant per mida del punt de l'estacio (mes petit que la coordenada, perque no s'enganxin)
 
         def __init__(self,parent,trans):
             super(Viewer.Map, self).__init__()
@@ -105,23 +106,32 @@ class Viewer(QtGui.QDialog):
             ident = st.id
             x,y = self.transformStationCoords(st.x,st.y)
 
+            # Primer, pintem les connexions (perque quedin a sota). Nomes les pintem un cop
+            # Ara, les connexions
+            for link in st.links:
+                if link.id > st.id:
+                    otherSt = self.trans.getStationByID(link.id)
+                    oX,oY = self.transformStationCoords(otherSt.x,otherSt.y)
+                    qp.setPen(self.parent.getLineColor(st.getCommonLine(otherSt)))
+                    qp.drawLine(x,y,oX,oY)
+                    qp.setPen(QtCore.Qt.black)
+                    qp.drawText((x+oX)/2, (y+oY)/2, str(link.cost)) # dibuixem cost
+
             qp.setPen(QtCore.Qt.gray)
             qp.setBrush(QtCore.Qt.black)
             qp.drawEllipse(x-(self.MIDA_EST/2), y-(self.MIDA_EST/2), self.MIDA_EST, self.MIDA_EST) # dibuixem estacio
-            qp.setPen(QtCore.Qt.red)
-            qp.drawText(x-self.MIDA_EST, y-self.MIDA_EST, str(ident)) # dibuixem ID
-
-            # Ara, les connexions
-            for link in st.links:
-                otherSt = self.trans.getStationByID(link.id)
-                oX,oY = self.transformStationCoords(otherSt.x,otherSt.y)
-                qp.setPen(self.parent.getLineColor(st.getCommonLine(otherSt)))
-                qp.drawLine(x,y,oX,oY)
-
+            qp.setPen(QtCore.Qt.white)
+            qp.drawText(x-(self.MIDA_EST/3), y+(self.MIDA_EST/3), str(ident)) # dibuixem ID dintre de les rodones
             
         def draw(self, qp):
+            font = QtGui.QFont()
+            font.setPixelSize(int(self.MIDA_EST/1.5))
+            font.setBold(True)
+            qp.setFont(font)
             for st in self.trans.stations:
                 self.drawStation(qp,st)
 
 if __name__ == '__main__':
-    print "NO."
+    app = QtGui.QApplication(sys.argv)
+    win = Viewer(None,TransEdit.loadFile("./lyon.yaml"))
+    sys.exit(app.exec_())
