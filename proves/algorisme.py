@@ -100,8 +100,18 @@ def expandirCami(cami):
 		nova_estacio = trans.getStationByID(link.id)
 		#fem una copia de la llista camí
 		nou_cami = copy.copy(cami)
-		# addElement inserta un nou element (estacio i origen) al inici del cami
+
+		# Calculem cost.
 		nou_cami.cost = cami.cost+link.cost # cost anterior + cost del link
+		# Si hem canviat de linea, es un transbord. Li sumem el cost del transbord (st.cost)
+		# Per comprovar-ho: Si venim de la primera o caminar, res.
+		# Si no es així, comprovem si la linea origen i la del link son iguals o no
+		orig = nou_cami[0].origin
+		if not orig == AStarList.FIRST and not orig == AStarList.WALKING and not orig == link.line:
+			nou_cami.cost += nou_cami[0].st.cost
+
+
+		# addElement inserta un nou element (estacio i origen) al inici del cami
 		nou_cami.addElement(nova_estacio,link.line)
 		#insertem el nou camí a la llista d'expandits
 		expandit.addPath(nou_cami)
@@ -201,7 +211,7 @@ def provaExpCami():
 
 def provainsertOrdenat():
 	arrel = trans.getStationByID(4)
-	objectiu = trans.getStationByID(8)
+	objectiu = trans.getStationByID(16)
 
 	"""
 	l = AStarList(arrel, objectiu)
