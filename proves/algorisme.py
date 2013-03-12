@@ -5,6 +5,7 @@ import yaml
 import copy # per copiar objectes
 from Transport import Transport
 from nousTipus import AStarList
+from nousTipus import calcDistance
 
 #AQUESTA FUNCIO NO ES FA SERVIR AQUI PERO EM SEMBLA UTIL
 def getStationsLinea(linea):
@@ -106,6 +107,21 @@ def expandirCami(cami):
 		#insertem el nou camí a la llista d'expandits
 		expandit.addPath(nou_cami)
 
+	#CAMINS CAMINANT
+	actual = cami.getPrimeraEstacio() #estacio actual desde la que caminem
+	for estacio in trans.stations:
+		#no afegim el cami d'anar caminant desde una estacio a ella mateixa
+		if actual.id != estacio.id:
+			#copiem la llista
+			nou_cami = copy.copy(cami)
+
+			#obtenim les coordenades per calcular la distancia
+			c1 = (actual.x, actual.y)
+			c2 = (estacio.x, estacio.y)
+			nou_cami.cost = cami.cost + 12*calcDistance(c1, c2)
+			nou_cami.addElement(estacio,AStarList.WALKING)
+			expandit.addPath(nou_cami)
+
 	return expandit
 
 def provaEliminarCicles():
@@ -200,8 +216,8 @@ def provaExpCami():
 		#print llista[0][0].name, llista[1][0].name
 
 def provainsertOrdenat():
-	arrel = trans.getStationByID(4)
-	objectiu = trans.getStationByID(8)
+	arrel = trans.getStationByID(13)
+	objectiu = trans.getStationByID(31)
 
 	"""
 	l = AStarList(arrel, objectiu)
@@ -217,6 +233,7 @@ def provainsertOrdenat():
 	llista = cercaA(arrel, objectiu)
 	print llista
 
+
 if __name__ == '__main__':
 	trans = Transport.loadFile("lyon.yaml")
 	print "Prova Expandir:"
@@ -225,5 +242,5 @@ if __name__ == '__main__':
 	provaEliminarCicles()
 	print "Prova Eliminar Redundants:"
 	provaEliminarRedundants()
-	print "Prova AStartList.insertOrdenat"
+	print "Prova AStarList.insertOrdenat"
 	provainsertOrdenat()
