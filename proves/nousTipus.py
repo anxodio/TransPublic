@@ -40,8 +40,9 @@ class AStarList(object):
 	def __init__(self,originSt=None,targetSt=None): # Es pot iniciar amb la primera estacio (perque crei l'estructura, amb cost 0), o buit
 		super(AStarList, self).__init__()
 		self.paths = []
+		#Posem el desti, ja que serà necessari alhora de calcular la heurística
 		self.target = targetSt
-		if originSt: self.setup(originSt)
+		if originSt: self.setup(originSt)#si la llista que entra no esta buida fem el setup, per afegir el node inicial a la llista
 
 	def setup(self,originSt):
 		#Creem el cami on està l'arrel. De moment té cost zero ja que només hi ha una estacio (l'arrel)
@@ -63,9 +64,11 @@ class AStarList(object):
 
 		for i in range(len(self)):
 			if heuristica <= calcF(self.paths[i], self.target):
+				#si la funcio f es menor afegim davant
 				self.paths.insert(i, cami)
 				break
 		else:
+			#si la funcio f és major, aleshores afegim al final, ja que és el camí amb més cost
 			self.paths.append(cami)
 
 
