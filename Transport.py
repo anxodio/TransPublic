@@ -22,6 +22,15 @@ class Transport(yaml.YAMLObject):
 
 		return station
 
+	def getStationByCoords(self,x,y):
+		station = None
+		for st in self.stations:
+			if st.x == x and st.y == y: 
+				station = st
+				break
+
+		return station
+
 
 	class Station(yaml.YAMLObject):
 		"""docstring for Station"""
