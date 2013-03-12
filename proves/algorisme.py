@@ -5,6 +5,7 @@ import yaml
 import copy # per copiar objectes
 from Transport import Transport
 from nousTipus import AStarList
+from nousTipus import calcDistance
 
 #AQUESTA FUNCIO NO ES FA SERVIR AQUI PERO EM SEMBLA UTIL
 def getStationsLinea(linea):
@@ -110,11 +111,25 @@ def expandirCami(cami):
 		if not orig == AStarList.FIRST and not orig == AStarList.WALKING and not orig == link.line:
 			nou_cami.cost += nou_cami[0].st.cost
 
-
 		# addElement inserta un nou element (estacio i origen) al inici del cami
 		nou_cami.addElement(nova_estacio,link.line)
 		#insertem el nou camí a la llista d'expandits
 		expandit.addPath(nou_cami)
+
+	#CAMINS CAMINANT
+	actual = cami.getPrimeraEstacio() #estacio actual desde la que caminem
+	for estacio in trans.stations:
+		#no afegim el cami d'anar caminant desde una estacio a ella mateixa
+		if actual.id != estacio.id:
+			#copiem la llista
+			nou_cami = copy.copy(cami)
+
+			#obtenim les coordenades per calcular la distancia
+			c1 = (actual.x, actual.y)
+			c2 = (estacio.x, estacio.y)
+			nou_cami.cost = cami.cost + 12*calcDistance(c1, c2)
+			nou_cami.addElement(estacio,AStarList.WALKING)
+			expandit.addPath(nou_cami)
 
 	return expandit
 
@@ -226,6 +241,7 @@ def provainsertOrdenat():
 
 	llista = cercaA(arrel, objectiu)
 	print llista
+
 
 if __name__ == '__main__':
 	trans = Transport.loadFile("lyon.yaml")
