@@ -6,17 +6,45 @@
 import yaml
 from Transport import Transport
 
+#calcular distancia
+import math
+
+def calcF(cami, estacio2):
+	"""Calcula el valor de la funcio F d'un cami per arribar a l'origen"""
+	#HEURISTICA PORVISIONAL: DISTANCIA ENTRE DOS ESTACIONS
+	#F = HEURISTICA + COST ACUMULAT
+
+	#DE CARA A UN FUTUR HEM DE CONSIDERAR RETORNAR UNA HEURISTICA O UNA ALTRA SEGONS
+	#UN VALOR PREDEFINIT (UN VALOR CRITERI) QUE INDICARA SOBRE QUIN ESPECTE VOLEM OPTIMITZAR
+	#EL RECORREGUT = TEMPS, DISTANCIA, NUM_TRANSBORDS
+
+	estacio1 = cami.getPrimeraEstacio()
+	#Primer generem les tuples amb les dues coordenades de cada estacio
+	c1 = (estacio1.x, estacio1.y)
+	c2 = (estacio2.x, estacio2.y)
+
+	#Potser interesa multiplicar la distancia per algun valor
+	return calcDistance(c1, c2) + cami.cost
+
+def calcDistance(coord1, coord2):
+	"""Calcula la distancia entre dues posicions del mapa"""
+	#coord1 i coord2 son una tupla amb 2 camps: (x, y)
+	dist = math.sqrt( pow((coord1[0]-coord2[0]),2) + pow((coord1[1]-coord2[1]),2))
+	return dist
+
 class AStarList(object):
 	# Constants per l'origen del element
 	WALKING = "WALKING"
 	FIRST = "FIRST"
 
-	def __init__(self,originSt=None): # Es pot iniciar amb la primera estacio (perque crei l'estructura, amb cost 0), o buit
+	def __init__(self,originSt=None,targetSt=None): # Es pot iniciar amb la primera estacio (perque crei l'estructura, amb cost 0), o buit
 		super(AStarList, self).__init__()
 		self.paths = []
+		self.target = targetSt
 		if originSt: self.setup(originSt)
 
 	def setup(self,originSt):
+		#Creem el cami on està l'arrel. De moment té cost zero ja que només hi ha una estacio (l'arrel)
 		p = AStarList.Path(0)
 		p.addElement(originSt,AStarList.FIRST)
 		self.paths.append(p) # afegim el primer
@@ -24,13 +52,36 @@ class AStarList(object):
 	def addPath(self,path):
 		self.paths.insert(0,path) # afegim a la primera posició
 
+	def insertOrdenat(self, cami):
+		""" Inserta el cami passat per parametre a la llista"""
+		#cami es un objecte Path
+		#ha d'insertar el cami ordenat segons heuristica
+		heuristica = calcF(cami, self.target)
+
+		#DEBUG ORDENAR
+		#print cami.getPrimeraEstacio().id, heuristica
+
+		for i in range(len(self)):
+			if heuristica <= calcF(self.paths[i], self.target):
+				self.paths.insert(i, cami)
+				break
+		else:
+			self.paths.append(cami)
+
+
 	def remove(self,path):
 		""" Busca el camí i l'extreu """
 		self.paths.remove(path)
 
 	def pop(self,pos):
 		""" Extreu l'ultim cami i el retorna """
+		#OBSERVACIO GUILLEM: no extreu l'ultim cami, extreu l'indicat per l'index pos
 		return self.paths.pop(pos)
+
+	def getCap(self):
+		"""Retorna l'estacio cap del primer cami de la llista"""
+		#self[0] es el mateix que self.paths[0]
+		return self.paths[0].getPrimeraEstacio()
 
 	def __len__(self):
 		""" Quants camins tenim? """
@@ -79,6 +130,7 @@ class AStarList(object):
 			self.elements = []
 
 		def addElement(self,st,origin):
+			#parametre origin es la identificacio de la procedencia
 			e = AStarList.Path.Element(st,origin)
 			self.elements.insert(0,e) # es van omplint sempre desde el principi de la llista
 
@@ -91,6 +143,11 @@ class AStarList(object):
 					cicle = True
 					break
 			return cicle
+
+		def getPrimeraEstacio(self):
+			"""Retorna la primera estacio (objecte Transport.Station) d'un camí"""
+			#podem fer self[0] aprofitant el getitem sobrecarregat
+			return self[0].st
 
 		def __copy__(self):
 			p = AStarList.Path(self.cost)

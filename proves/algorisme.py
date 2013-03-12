@@ -6,9 +6,6 @@ import copy # per copiar objectes
 from Transport import Transport
 from nousTipus import AStarList
 
-#calcular distancia
-import math
-
 #AQUESTA FUNCIO NO ES FA SERVIR AQUI PERO EM SEMBLA UTIL
 def getStationsLinea(linea):
 	"""Retorna una llista amb les estacions de la linea indicada"""
@@ -19,23 +16,28 @@ def getStationsLinea(linea):
 
 	return estacions
 
-def calcDistance(coord1, coord2):
-	"""Calcula la distancia entre dues posicions del mapa"""
-	#coord1 i coord2 son una llista amb 2 camps: (x, y)
-	dist = math.sqrt( pow((coord1[0]-coord2[0]),2) + pow((coord1[1]-coord2[1]),2))
-	return dist
-
 def cercaA(arrel, objectiu):
-	llista = AStarList(arrel)
+	"""llista = AStarList(arrel, objectiu)"""
+	llista = AStarList(arrel, objectiu)
 
 	#mentre no trobem l'objectiu anirem expandint
-	while (llista[0][0] != objectiu or len(llista) > 0):
+	while (llista.getCap() != objectiu and len(llista) > 0):
 		#pop(0) agafa el primer cami (objecte AStarList.Path)
 		cami = llista.pop(0)
 		cami_exp = expandirCami(cami)
+		#cami_exp es un objecte AStarList
 		cami_exp = eliminarCicles(cami_exp)
 		#TO DO: insertar cami_exp a llista
+		llista = insertarCamins(llista, cami_exp)
 		llista = eliminarCaminsRedundants(llista)
+
+	return llista
+
+def insertarCamins(llista, cami_exp):
+	for cami in cami_exp:
+		llista.insertOrdenat(cami)
+
+	return llista
 
 # INNECESSARIA
 def isInCami(estacio, cami):
@@ -51,7 +53,7 @@ def isInCami(estacio, cami):
 def eliminarCicles(cami_exp):
 	"""Elimina cicles del cami expandit"""
 	#Quan hi ha cicle??
-	#Quan cami[0][0] esta repetit dins el mateix cami (Nomes mirem cami[0][0] perque els altres elements ja els hauriem d'haver comprovat abans)
+	#Quan la primera estacio esta repetida dins el mateix cami
 	
 	eliminar = []
 
@@ -74,6 +76,7 @@ def eliminarCaminsRedundants(cami_exp):
 
 	#cami_exp es del tipus[ [[(arrel, "O")],0] ]
 	for cami in cami_exp:
+		#podem fer cami[0] en comptes de cami.paths[0] perque s'ha sobrecarregat el metode getitem per als objetces Path
 		llista_caps.append(cami[0].st)
 
 	#for i in (longitud de la llista de caps -1) fins a -1 decrementant 1
@@ -196,6 +199,24 @@ def provaExpCami():
 	#for llista in exp:
 		#print llista[0][0].name, llista[1][0].name
 
+def provainsertOrdenat():
+	arrel = trans.getStationByID(4)
+	objectiu = trans.getStationByID(8)
+
+	"""
+	l = AStarList(arrel, objectiu)
+	cami = l.pop(0)
+	exp = expandirCami(cami)
+
+	print l
+	for path in exp:
+		l.insertOrdenat(path)
+	print l
+	"""
+
+	llista = cercaA(arrel, objectiu)
+	print llista
+
 if __name__ == '__main__':
 	trans = Transport.loadFile("lyon.yaml")
 	print "Prova Expandir:"
@@ -204,3 +225,5 @@ if __name__ == '__main__':
 	provaEliminarCicles()
 	print "Prova Eliminar Redundants:"
 	provaEliminarRedundants()
+	print "Prova AStartList.insertOrdenat"
+	provainsertOrdenat()
