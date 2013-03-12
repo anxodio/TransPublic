@@ -14,6 +14,7 @@ class Transport(yaml.YAMLObject):
 		self.stations = stations
 
 	def getStationByID(self,ident):
+		"""Obtenim la estació segons el seu id"""
 		station = None
 		for st in self.stations:
 			if st.id == ident: 
@@ -39,6 +40,7 @@ class Transport(yaml.YAMLObject):
 
 		def getCommonLine(self,st):
 			line = None
+			#recorregut de la llista de strings, per veure les línies similars entre dues estacions
 			for l in self.lines:
 				if l in st.lines:
 					line = l
@@ -55,6 +57,7 @@ class Transport(yaml.YAMLObject):
 				self.cost = int(cost)
 				self.line = line
 
+	######------- No necessitem crear cap instancia de classe per poder executar els mètodes --------###### 
 	@staticmethod
 	def loadFile(fitxer):
 		t = yaml.load(file(fitxer, 'r')) # Objecte Tranport
