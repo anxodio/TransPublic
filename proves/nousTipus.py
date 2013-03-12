@@ -81,7 +81,7 @@ class AStarList(object):
 	def getCap(self):
 		"""Retorna l'estacio cap del primer cami de la llista"""
 		#self[0] es el mateix que self.paths[0]
-		return self.paths[0].getPrimeraEstacio()
+		return self[0].getPrimeraEstacio()
 
 	def __len__(self):
 		""" Quants camins tenim? """
