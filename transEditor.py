@@ -6,7 +6,7 @@ import yaml
 from PyQt4 import QtGui, QtCore, uic
 
 from TransEdit import TransEdit
-import viewer
+from Viewer import Viewer
 
 class TransEditor(QtGui.QMainWindow):
 	def __init__(self):
@@ -59,7 +59,7 @@ class TransEditor(QtGui.QMainWindow):
 
 	def genMap(self):
 		if self.trans:
-			viewer.Viewer(self,self.trans)
+			Viewer(self,self.trans)
 
 	def comprovaCreat(self):
 		ok = True

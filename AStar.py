@@ -342,7 +342,7 @@ if __name__ == '__main__':
 		print " 1 = Llista simple python amb el camí òptim (ideal per jocs de proves)"
 		print " 2 = Explicació llegible per humans (Human Readable) "
 		print
-		print "Per exemple: ./AStar.py \"./lyon.yaml\" 13 10 0"
+		print "Per exemple: python AStar.py \"./lyon.yaml\" 13 10 0"
 		print
 		sys.exit()
 
@@ -379,7 +379,7 @@ if __name__ == '__main__':
 		print llista
 	elif mode == 2:
 		cami = l[0]
-		print "Estàs a l'estació "+cami[0].st.name
+		print "Estàs a l'estació "+cami[len(cami)-1].st.name
 
 		# TODO: Això és podria millorar fent que no et digues totes les estacions, sino nomes en les que canvies de linea
 		for i in range(len(cami)-2,-1,-1):
@@ -387,6 +387,5 @@ if __name__ == '__main__':
 				print "Ves caminant fins a l'estació "+cami[i].st.name
 			else:
 				print "Ves amb la línia "+cami[i].origin+" a l'estació "+cami[i].st.name
-
 
 		print "Felicitats! Has arribat!"

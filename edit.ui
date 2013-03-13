@@ -273,7 +273,6 @@
    </widget>
    <addaction name="menuMen"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="menuExit">
    <property name="text">
     <string>Sortir</string>
