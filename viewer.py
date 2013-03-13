@@ -106,6 +106,8 @@ class Viewer(QtGui.QDialog):
             distX = maxX + minX*-1
             distY = maxY + minY*-1
 
+            print distX, distY
+
             width = distX*self.MIDA_COORD # La distacia d'una banda a una altre
             height = distY*self.MIDA_COORD
 
@@ -192,12 +194,12 @@ class Viewer(QtGui.QDialog):
             print "size",w,h
             i = 0
             while (i <= w):
-                qp.drawLine(0,i,h,i)
+                qp.drawLine(i,0,i,h)
                 i += self.MIDA_COORD
 
             i = 0
             while (i <= h):
-                qp.drawLine(i,0,i,w)
+                qp.drawLine(0,i,w,i)
                 i += self.MIDA_COORD
 
         def draw(self, qp):
