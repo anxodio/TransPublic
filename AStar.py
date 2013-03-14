@@ -24,7 +24,7 @@ class AStar(object):
 		dist = math.sqrt( pow((coord1[0]-coord2[0]),2) + pow((coord1[1]-coord2[1]),2))
 		return int(dist)
 
-	def calcF(self, cami, estacio2):
+	def calcF(self, cami):
 		"""Calcula el valor de la funcio F d'un cami per arribar a l'origen"""
 		#HEURISTICA PORVISIONAL: DISTANCIA ENTRE DOS ESTACIONS
 		#F = HEURISTICA + COST ACUMULAT
@@ -36,7 +36,7 @@ class AStar(object):
 		estacio1 = cami.getPrimeraEstacio()
 		#Primer generem les tuples amb les dues coordenades de cada estacio
 		c1 = (estacio1.x, estacio1.y)
-		c2 = (estacio2.x, estacio2.y)
+		c2 = (self.target.x, self.target.y)
 
 		#Potser interesa multiplicar la distancia per algun valor
 		return self.calcDistance(c1, c2) + cami.cost
@@ -103,7 +103,7 @@ class AStar(object):
 
 	def insertarCamins(self, cami_exp):
 		for cami in cami_exp:
-			self.list.insertOrdenat(cami, self.origin, self.calcF)
+			self.list.insertOrdenat(cami, self.calcF)
 
 	def eliminarCaminsRedundants(self):
 		""" Elimina camins de la llista que son redundants """
@@ -144,6 +144,24 @@ class AStar(object):
 
 		return self.list
 
+	def transformPathToHumanReadable(self,path):
+		text = "Et trobes a l'estació "+path[-1].st.name+".\n"
+		# Separem el primer per fer un text més maco
+		if len(path) >= 2:
+			if path[-2].origin == AStar.AStarList.WALKING:
+				text += " - Ves caminant fins a l'estació "+path[-2].st.name
+			else:
+				text += " - Agafa la línia "+path[-2].origin+" en direcció "+self.trans.getLineHead(path[-1].st,path[-2].st,path[-2].origin).name
+
+		for i in range(len(path)-2,0,-1):
+			if path[i-1].origin == AStar.AStarList.WALKING:
+				text += "\n - Baixa a l'estació "+path[i].st.name+" i ves caminant fins a l'estació "+path[i-1].st.name
+			elif not path[i].origin == path[i-1].origin:
+				text += "\n - A l'estació "+path[i].st.name+", agafa la línia "+path[i-1].origin+" en direcció "+self.trans.getLineHead(path[i].st,path[i-1].st,path[i-1].origin).name
+
+		text += "\n - Baixa a "+path[0].st.name+".\nFelicitats! Has arribat!"
+		return text
+
 	class AStarList(object):
 		""" Estructura de dades per la llista de l'algorisme A* """
 		# Constants per l'origen del element
@@ -164,17 +182,17 @@ class AStar(object):
 		def addPath(self,path):
 			self.paths.insert(0,path) # afegim a la primera posició
 
-		def insertOrdenat(self, cami, targetSt, funcioHeuristica):
+		def insertOrdenat(self, cami, funcioHeuristica):
 			""" Inserta el cami passat per parametre a la llista, calculant l'heuristica amb la funcio rebuda per parametre """
 			#cami es un objecte Path
 			#ha d'insertar el cami ordenat segons heuristica
-			heuristica = funcioHeuristica(cami, targetSt)
+			heuristica = funcioHeuristica(cami)
 
 			#DEBUG ORDENAR
 			#print cami.getPrimeraEstacio().id, heuristica
 
 			for i in range(len(self)):
-				if heuristica <= funcioHeuristica(self.paths[i], targetSt):
+				if heuristica <= funcioHeuristica(self.paths[i]):
 					#si la funcio f es menor afegim davant
 					self.paths.insert(i, cami)
 					break
@@ -379,13 +397,4 @@ if __name__ == '__main__':
 		print llista
 	elif mode == 2:
 		cami = l[0]
-		print "Estàs a l'estació "+cami[len(cami)-1].st.name
-
-		# TODO: Això és podria millorar fent que no et digues totes les estacions, sino nomes en les que canvies de linea
-		for i in range(len(cami)-2,-1,-1):
-			if cami[i].origin == AStar.AStarList.WALKING:
-				print "Ves caminant fins a l'estació "+cami[i].st.name
-			else:
-				print "Ves amb la línia "+cami[i].origin+" a l'estació "+cami[i].st.name
-
-		print "Felicitats! Has arribat!"
+		print a.transformPathToHumanReadable(cami)

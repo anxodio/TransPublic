@@ -31,6 +31,18 @@ class Transport(yaml.YAMLObject):
 
 		return station
 
+	def getLineHead(self,st,stSeguent,line):
+		head = None
+		for link in stSeguent.links:
+			if link.line == line and not link.id == st.id:
+				head = self.getLineHead(stSeguent,self.getStationByID(link.id),line)
+				return head
+
+		# Cas trivial! Si no en troba cap, estem a cap de linea
+		head = stSeguent
+		return head
+
+
 
 	class Station(yaml.YAMLObject):
 		"""docstring for Station"""
