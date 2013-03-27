@@ -13,8 +13,13 @@ class Map(QtGui.QFrame):
             self.parent = parent # guardem el parent per poder fer servir funcions comuns, com getLineColor
             self.trans = trans
 
+            self.stMouse = None # Estacio on tenim el ratoli
+
+            self.setMouseTracking(True)
+
             # Connexions
             self.mousePressEvent = self.pixelSelect
+            self.mouseMoveEvent = self.pixelMove
 
             if self.trans:
                 self.initUI()
@@ -67,6 +72,20 @@ class Map(QtGui.QFrame):
                 # TRANSFORMAR
                 newX, newY = self.transformPixelToStationCoords(x,y)
                 self.parent.selectStationByCoords(newX,newY,event.button())
+
+        def pixelMove(self,event):
+            if self.trans:
+                x = event.pos().x()
+                y = event.pos().y()
+                # TRANSFORMAR i afagar l'estacio
+                newX, newY = self.transformPixelToStationCoords(x,y)
+                st = self.trans.getStationByCoords(newX,newY)
+                if st: # si existeix
+                    self.stMouse = st
+                else:
+                    self.stMouse = None # la tornem a deixar buida
+                self.repaint() # repintem
+
 
         def paintEvent(self, e):
             qp = QtGui.QPainter()
@@ -146,6 +165,32 @@ class Map(QtGui.QFrame):
                 qp.drawLine(0,i,w,i)
                 i += self.MIDA_COORD
 
+        def drawStMouse(self, qp):
+            # Si tenim el ratoli a sobre d'una estacio, pintem el seu nom
+            if self.stMouse:
+                x,y = self.transformStationCoordsToPixel(self.stMouse.x,self.stMouse.y)
+                font = QtGui.QFont()
+                font.setPixelSize(int(self.MIDA_EST))
+                font.setBold(True)
+                qp.setFont(font)
+
+                w = self.size().width()
+                h = self.size().height()
+
+                text = self.stMouse.name
+                midaRealText = len(text)*int(self.MIDA_EST)
+
+                # Posicions, perque el text sempre entri en pantalla
+                posX = x+self.MIDA_EST if x < w-midaRealText else x-midaRealText/1.4 # 1.4 es una aproximacio perque quedi be
+                posY = y
+
+                qp.setPen(QtCore.Qt.gray)
+                qp.setBrush(QtCore.Qt.white)
+                qp.drawRoundedRect(posX-self.MIDA_EST, posY-self.MIDA_EST, midaRealText, self.MIDA_EST+self.MIDA_EST/2, 5, 5)
+
+                qp.setPen(QtCore.Qt.black)
+                qp.drawText(posX, posY, text)
+
         def draw(self, qp):
 
             #self.drawGrid(qp) # Per proves
@@ -162,8 +207,10 @@ class Map(QtGui.QFrame):
                 if cami:
                     self.drawCami(qp,cami)
             except:
-                print "MEC"
                 pass # Nomes hi ha cami a transPublic, per aixo esperem excepcio (per viewer)
+
+            # Nom de l'estacio on tenim el ratoli
+            self.drawStMouse(qp)
 
 if __name__ == '__main__':
     print "Not an executable class"
