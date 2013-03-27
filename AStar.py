@@ -11,12 +11,15 @@ import copy # per copiar objectes
 
 class AStar(object):
 	""" Classe per realitzar la cerca A* """
-	def __init__(self,trans,origin=None,target=None): # Objecte transport obligatori. També es poden afegir directament origen i desti
+	def __init__(self,trans,origin=None,target=None, dist=None, transbords=None, parades=None): # Objecte transport obligatori. També es poden afegir directament origen i desti
 		super(AStar, self).__init__()
 		self.trans = trans
 		self.list = None # per la llista que manté l'algorisme
 		self.origin = origin
 		self.target = target
+		self.max_dist = dist
+		self.max_transbords = transbords
+		self.max_parades = parades
 
 	def calcDistance(self, coord1, coord2):
 		"""Calcula la distancia entre dues posicions del mapa"""
@@ -56,12 +59,21 @@ class AStar(object):
 
 			# Calculem cost.
 			nou_cami.cost = cami.cost+link.cost # cost anterior + cost del link
+			nou_cami.parades += 1 # num parades anterior + 1
+
+			# Nova distancia
+			c1 = (cami[0].st.x, cami[0].st.y)
+			c2 = (nova_estacio.x, nova_estacio.y)
+			nou_cami.distancia = cami.distancia + self.calcDistance(c1, c2) # distancia anterior + nova distancia
+
 			# Si hem canviat de linea, es un transbord. Li sumem el cost del transbord (st.cost)
 			# Per comprovar-ho: Si venim de la primera o caminar, res.
 			# Si no es així, comprovem si la linea origen i la del link son iguals o no
 			orig = nou_cami[0].origin
 			if not orig == AStar.AStarList.FIRST and not orig == AStar.AStarList.WALKING and not orig == link.line:
 				nou_cami.cost += nou_cami[0].st.cost
+				# aumentem el número de transbords
+				nou_cami.transbords += 1
 
 			# addElement inserta un nou element (estacio i origen) al inici del cami
 			nou_cami.addElement(nova_estacio,link.line)
@@ -79,7 +91,15 @@ class AStar(object):
 				#obtenim les coordenades per calcular la distancia
 				c1 = (actual.x, actual.y)
 				c2 = (estacio.x, estacio.y)
-				nou_cami.cost = cami.cost + 12*self.calcDistance(c1, c2)
+				distancia_caminant = self.calcDistance(c1, c2)
+
+				# Actualitzem valors del cami
+				nou_cami.cost = cami.cost + 12*distancia_caminant
+				nou_cami.parades += 1
+				nou_cami.distancia = cami.distancia + distancia_caminant
+				# considerem caminar com a un transbord
+				nou_cami.transbords += 1
+
 				nou_cami.addElement(estacio,AStar.AStarList.WALKING)
 				expandit.addPath(nou_cami)
 
@@ -103,7 +123,10 @@ class AStar(object):
 
 	def insertarCamins(self, cami_exp):
 		for cami in cami_exp:
-			self.list.insertOrdenat(cami, self.calcF)
+			if self.max_transbords == None or cami.transbords <= self.max_transbords:
+				if self.max_parades == None or cami.parades <= self.max_parades:
+					if self.max_dist == None or cami.distancia <= self.max_distancia:
+						self.list.insertOrdenat(cami, self.calcF)
 
 	def eliminarCaminsRedundants(self):
 		""" Elimina camins de la llista que son redundants """
@@ -259,6 +282,9 @@ class AStar(object):
 				super(AStar.AStarList.Path, self).__init__()
 				self.cost = cost
 				self.elements = []
+				self.transbords = 0
+				self.parades = 0
+				self.distancia = 0
 
 			def addElement(self,st,origin):
 				#parametre origin es la identificacio de la procedencia
