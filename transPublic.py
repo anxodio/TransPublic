@@ -73,6 +73,7 @@ class TransPublic(QtGui.QMainWindow):
 	def seleccionaEstacio(self,t,funcio):
 		# Permet seleccionar tant l'origen com la desti, per no repetir codi
 		self.cami = None # reiniciem cami!
+		self.ui.tResultat.setText("") # reiniciem text resultat
 		if not t == self.SELECT_DEFECTE:
 			text = str(t)
 			ident = int(text.split(" ")[0]) # Separem per espais i agafem la ID
@@ -93,6 +94,10 @@ class TransPublic(QtGui.QMainWindow):
 			camins = self.a.doAStarSearch(self.stOrigen,self.stDesti)
 			self.cami = camins[0]
 			self.mF.repaint() # repintem
+		textHR = self.a.transformPathToHumanReadable(self.cami) # text Human Readable
+		textHR = textHR.replace("\n","<br />") # fiquem els salts de linea en format HTML
+		textQT = QtCore.QString.fromUtf8(textHR) # el passem a format QT ara es veuran bé els accents al QTextEdit
+		self.ui.tResultat.setHtml(textQT+"<br /><br />Cost: <b>"+str(self.cami.cost)+"</b>")
 
 	def selectStationByCoords(self,x,y,button):
 		st = self.trans.getStationByCoords(x,y)
