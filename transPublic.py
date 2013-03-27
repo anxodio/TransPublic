@@ -91,13 +91,23 @@ class TransPublic(QtGui.QMainWindow):
 
 	def calcula(self):
 		if self.stOrigen and self.stDesti:
-			camins = self.a.doAStarSearch(self.stOrigen,self.stDesti)
+			# Agafem valors de spinbox (si son diferents a 0, sino None)
+			max_dist = None if int(self.ui.spDistancia.value()) == 0 else int(self.ui.spDistancia.value())
+			max_transbords = None if int(self.ui.spTransbords.value()) == 0 else int(self.ui.spTransbords.value())
+			max_parades = None if int(self.ui.spParades.value()) == 0 else int(self.ui.spParades.value())
+
+			# Executem algorisme a estrella
+			camins = self.a.doAStarSearch(self.stOrigen,self.stDesti,max_dist,max_transbords,max_parades)
 			self.cami = camins[0]
 			self.mF.repaint() # repintem
-		textHR = self.a.transformPathToHumanReadable(self.cami) # text Human Readable
-		textHR = textHR.replace("\n","<br />") # fiquem els salts de linea en format HTML
-		textQT = QtCore.QString.fromUtf8(textHR) # el passem a format QT ara es veuran bé els accents al QTextEdit
-		self.ui.tResultat.setHtml(textQT+"<br /><br />Cost: <b>"+str(self.cami.cost)+"</b>")
+
+			textHR = self.a.transformPathToHumanReadable(self.cami) # text Human Readable
+			textHR = textHR.replace("\n","<br />") # fiquem els salts de linea en format HTML
+			textQT = QtCore.QString.fromUtf8(textHR) # el passem a format QT ara es veuran bé els accents al QTextEdit
+			self.ui.tResultat.setHtml(textQT+"<br /><br />Cost (temps): <b>"+str(self.cami.cost)+"</b>\
+			<br />Distancia: <b>"+str(self.cami.distancia)+"</b>\
+			<br />Transbords: <b>"+str(self.cami.transbords)+"</b>\
+			<br />Parades: <b>"+str(self.cami.parades)+"</b>")
 
 	def selectStationByCoords(self,x,y,button):
 		st = self.trans.getStationByCoords(x,y)

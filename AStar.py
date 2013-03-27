@@ -11,15 +11,15 @@ import copy # per copiar objectes
 
 class AStar(object):
 	""" Classe per realitzar la cerca A* """
-	def __init__(self,trans,origin=None,target=None, dist=None, transbords=None, parades=None): # Objecte transport obligatori. També es poden afegir directament origen i desti
+	def __init__(self,trans,origin=None,target=None, max_dist=None, max_transbords=None, max_parades=None): # Objecte transport obligatori. També es poden afegir directament origen i desti
 		super(AStar, self).__init__()
 		self.trans = trans
 		self.list = None # per la llista que manté l'algorisme
 		self.origin = origin
 		self.target = target
-		self.max_dist = dist
-		self.max_transbords = transbords
-		self.max_parades = parades
+		self.max_dist = max_dist
+		self.max_transbords = max_transbords
+		self.max_parades = max_parades
 
 	def calcDistance(self, coord1, coord2):
 		"""Calcula la distancia entre dues posicions del mapa"""
@@ -125,13 +125,20 @@ class AStar(object):
 		for cami in cami_exp:
 			if self.max_transbords == None or cami.transbords <= self.max_transbords:
 				if self.max_parades == None or cami.parades <= self.max_parades:
-					if self.max_dist == None or cami.distancia <= self.max_distancia:
+					if self.max_dist == None or cami.distancia <= self.max_dist:
 						self.list.insertOrdenat(cami, self.calcF)
+
+	def boolRedundants(self):
+		""" Retorna si s'han d'eliminar redundants o no"""
+		return self.max_parades == None and self.max_dist == None and self.max_transbords == None
 
 	def eliminarCaminsRedundants(self):
 		""" Elimina camins de la llista que son redundants """
 		#Un camí es redundant quan va al mateix lloc que un altre camí i té més cost
 		#Un camí que té mes cost que un altre es trobará més a la dreta dins la llista
+
+		if not self.boolRedundants():
+			return # No hem d'eliminar redundants, ja que no nomes busquem cost optim
 
 		#creem una llista amb tots els destins dels camins actuals
 		llista_caps = []
@@ -147,10 +154,13 @@ class AStar(object):
 			if llista_caps[i] in llista_caps[:i]:
 				self.list.pop(i)
 
-	def doAStarSearch(self, origin=None, target=None):
+	def doAStarSearch(self, origin=None, target=None, max_dist=None, max_transbords=None, max_parades=None):
 		 # es poden posar en aquest moment
 		if origin: self.origin = origin
 		if target: self.target = target
+		self.max_dist = max_dist
+		self.max_transbords = max_transbords
+		self.max_parades = max_parades
 
 		self.list = AStar.AStarList(self.origin)
 
@@ -163,7 +173,7 @@ class AStar(object):
 			cami_exp = self.eliminarCicles(cami_exp)
 			#TO DO: insertar cami_exp a llista
 			self.insertarCamins(cami_exp)
-			self.eliminarCaminsRedundants()			
+			self.eliminarCaminsRedundants()
 
 		return self.list
 
@@ -198,7 +208,7 @@ class AStar(object):
 
 		def setup(self,originSt):
 			#Creem el cami on està l'arrel. De moment té cost zero ja que només hi ha una estacio (l'arrel)
-			p = AStar.AStarList.Path(0)
+			p = AStar.AStarList.Path(0,0,0,0) # cost,distancia,transbords,parades...
 			p.addElement(originSt,AStar.AStarList.FIRST)
 			self.paths.append(p) # afegim el primer
 
@@ -210,9 +220,6 @@ class AStar(object):
 			#cami es un objecte Path
 			#ha d'insertar el cami ordenat segons heuristica
 			heuristica = funcioHeuristica(cami)
-
-			#DEBUG ORDENAR
-			#print cami.getPrimeraEstacio().id, heuristica
 
 			for i in range(len(self)):
 				if heuristica <= funcioHeuristica(self.paths[i]):
@@ -278,13 +285,13 @@ class AStar(object):
 		
 		class Path(object):
 			""" Classe camí. Conte llista d'elements i cost """
-			def __init__(self,cost):
+			def __init__(self,cost=0,transbords=0,parades=0,distancia=0):
 				super(AStar.AStarList.Path, self).__init__()
 				self.cost = cost
 				self.elements = []
-				self.transbords = 0
-				self.parades = 0
-				self.distancia = 0
+				self.transbords = transbords
+				self.parades = parades
+				self.distancia = distancia
 
 			def addElement(self,st,origin):
 				#parametre origin es la identificacio de la procedencia
@@ -307,7 +314,7 @@ class AStar(object):
 				return self[0].st
 
 			def __copy__(self):
-				p = AStar.AStarList.Path(self.cost)
+				p = AStar.AStarList.Path(self.cost,self.transbords,self.parades,self.distancia)
 				for e in self.elements:
 					p.elements.append(e)
 				return p
@@ -339,7 +346,7 @@ class AStar(object):
 					l += str(e)+","
 				l = l.rstrip(",") # elimina la coma sobrant
 
-				return "["+l+","+str(self.cost)+"]"
+				return "["+l+","+str(self.cost)+","+str(self.transbords)+","+str(self.parades)+","+str(self.distancia)+"]"
 
 			def __iter__(self):
 				return self.Iterator(self.elements)
