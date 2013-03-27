@@ -126,7 +126,7 @@ class AStar(object):
 			if self.max_transbords == None or cami.transbords <= self.max_transbords:
 				if self.max_parades == None or cami.parades <= self.max_parades:
 					if self.max_dist == None or cami.distancia <= self.max_distancia:
-						self.list.insertOrdenat(cami, self.origin, self.calcF)
+						self.list.insertOrdenat(cami, self.calcF)
 
 	def eliminarCaminsRedundants(self):
 		""" Elimina camins de la llista que son redundants """
