@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>814</width>
-    <height>499</height>
+    <height>546</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_6">
+   <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -102,7 +102,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spTransbords"/>
+            <widget class="QSpinBox" name="spTransbords">
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -122,7 +129,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spParades"/>
+            <widget class="QSpinBox" name="spParades">
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -142,7 +156,53 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spDistancia"/>
+            <widget class="QSpinBox" name="spDistancia">
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="label_8">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Temps màxim caminant</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spCaminant">
+             <property name="prefix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>60</number>
+             </property>
+             <property name="singleStep">
+              <number>5</number>
+             </property>
+             <property name="value">
+              <number>25</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -160,7 +220,7 @@
             </font>
            </property>
            <property name="text">
-            <string>(amb 0 no hi ha màxim)</string>
+            <string>(amb -1 no hi ha màxim)</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -175,6 +235,10 @@
           </widget>
          </item>
         </layout>
+        <zorder>label_7</zorder>
+        <zorder>pbCalcula</zorder>
+        <zorder>layoutWidget</zorder>
+        <zorder>label_8</zorder>
        </widget>
       </item>
       <item>

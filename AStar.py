@@ -11,7 +11,8 @@ import copy # per copiar objectes
 
 class AStar(object):
 	""" Classe per realitzar la cerca A* """
-	def __init__(self,trans,origin=None,target=None, max_dist=None, max_transbords=None, max_parades=None): # Objecte transport obligatori. També es poden afegir directament origen i desti
+	# Objecte transport obligatori. També es poden afegir directament origen i desti, i maxims
+	def __init__(self,trans,origin=None,target=None, max_dist=None, max_transbords=None, max_parades=None, max_caminant=0):
 		super(AStar, self).__init__()
 		self.trans = trans
 		self.list = None # per la llista que manté l'algorisme
@@ -20,6 +21,7 @@ class AStar(object):
 		self.max_dist = max_dist
 		self.max_transbords = max_transbords
 		self.max_parades = max_parades
+		self.max_caminant = max_caminant # temps màxim caminant
 
 	def calcDistance(self, coord1, coord2):
 		"""Calcula la distancia entre dues posicions del mapa"""
@@ -60,6 +62,7 @@ class AStar(object):
 			# Calculem cost.
 			nou_cami.cost = cami.cost+link.cost # cost anterior + cost del link
 			nou_cami.parades += 1 # num parades anterior + 1
+			nou_cami.caminant = cami.caminant # es queda com l'anterior
 
 			# Nova distancia
 			c1 = (cami[0].st.x, cami[0].st.y)
@@ -93,10 +96,15 @@ class AStar(object):
 				c2 = (estacio.x, estacio.y)
 				distancia_caminant = self.calcDistance(c1, c2)
 
+				# Si distancia caminant és mes gran a la estipulada...
+				if distancia_caminant*12 > self.max_caminant-cami.caminant:
+					continue # No continuem, es passa del temps caminant
+
 				# Actualitzem valors del cami
 				nou_cami.cost = cami.cost + 12*distancia_caminant
 				nou_cami.parades += 1
 				nou_cami.distancia = cami.distancia + distancia_caminant
+				nou_cami.caminant = cami.caminant + 12*distancia_caminant # temps caminant
 				# considerem caminar com a un transbord
 				nou_cami.transbords += 1
 
@@ -126,7 +134,8 @@ class AStar(object):
 			if self.max_transbords == None or cami.transbords <= self.max_transbords:
 				if self.max_parades == None or cami.parades <= self.max_parades:
 					if self.max_dist == None or cami.distancia <= self.max_dist:
-						self.list.insertOrdenat(cami, self.calcF)
+						if self.max_caminant == None or cami.caminant <= self.max_caminant:
+							self.list.insertOrdenat(cami, self.calcF)
 
 	def boolRedundants(self):
 		""" Retorna si s'han d'eliminar redundants o no"""
@@ -154,13 +163,14 @@ class AStar(object):
 			if llista_caps[i] in llista_caps[:i]:
 				self.list.pop(i)
 
-	def doAStarSearch(self, origin=None, target=None, max_dist=None, max_transbords=None, max_parades=None):
+	def doAStarSearch(self, origin=None, target=None, max_dist=None, max_transbords=None, max_parades=None, max_caminant=0):
 		 # es poden posar en aquest moment
 		if origin: self.origin = origin
 		if target: self.target = target
 		self.max_dist = max_dist
 		self.max_transbords = max_transbords
 		self.max_parades = max_parades
+		self.max_caminant = max_caminant
 
 		self.list = AStar.AStarList(self.origin)
 
@@ -285,13 +295,14 @@ class AStar(object):
 		
 		class Path(object):
 			""" Classe camí. Conte llista d'elements i cost """
-			def __init__(self,cost=0,transbords=0,parades=0,distancia=0):
+			def __init__(self,cost=0,transbords=0,parades=0,distancia=0,caminant=0):
 				super(AStar.AStarList.Path, self).__init__()
 				self.cost = cost
 				self.elements = []
 				self.transbords = transbords
 				self.parades = parades
 				self.distancia = distancia
+				self.caminant = caminant # temps (cost) caminant
 
 			def addElement(self,st,origin):
 				#parametre origin es la identificacio de la procedencia
@@ -346,7 +357,7 @@ class AStar(object):
 					l += str(e)+","
 				l = l.rstrip(",") # elimina la coma sobrant
 
-				return "["+l+","+str(self.cost)+","+str(self.transbords)+","+str(self.parades)+","+str(self.distancia)+"]"
+				return "["+l+","+str(self.cost)+","+str(self.transbords)+","+str(self.parades)+","+str(self.distancia)+","+str(self.caminant)+"]"
 
 			def __iter__(self):
 				return self.Iterator(self.elements)
@@ -382,11 +393,14 @@ if __name__ == '__main__':
 	# Com executar: ./AStar.py fixer idOrigen idDesti mode
 	# Per exemple: ./AStar.py "./lyon.yaml" 13 10 0
 
-	if not len(sys.argv) == 5: # el propi nom de fitxer és argv[0]
+	if not len(sys.argv) >= 5:
 		print "Parametres incorrectes."
 		print
 		print "Com utilitzar desde consola AStar.py:"
-		print "./AStar.py fitxer idOrigen idDesti mode"
+		print "./AStar.py fitxer idOrigen idDesti mode distanciaMaxima transbordsMaxims paradesMaximes tempsCaminantMaxim"
+		print
+		print "Els màxims son opcionals. Si es posen, han de ser un enter de -1 a 99 (on -1 és infinit)"
+		print "En canvi, el maxim temps caminant va de 0 a 60, no pot ser infinit."
 		print
 		print "On mode és un enter:"
 		print " 0 = Resposta sense tractar (objecte AStarList en text) "
@@ -418,7 +432,46 @@ if __name__ == '__main__':
 		print "Mode incorrecte."
 		sys.exit()
 
-	a = AStar(trans,origen,desti)
+	distMax = None
+	try:
+		distMax = int(sys.argv[5])
+		if distMax < -1 or distMax > 99:
+			print "distanciaMaxima incorrecte."
+			sys.exit()
+	except:
+		pass
+
+	transMax = None
+	try:
+		transMax = int(sys.argv[6])
+		if transMax < -1 or transMax > 99:
+			print "transbordsMaxims incorrecte."
+			sys.exit()
+	except:
+		pass
+
+	paradMax = None
+	try:
+		paradMax = int(sys.argv[7])
+		if paradMax < -1 or paradMax > 99:
+			print "paradesMaximes incorrecte."
+			sys.exit()
+	except:
+		pass
+
+	caminMax = 0
+	try:
+		caminMax = int(sys.argv[8])
+		if caminMax < 0 or caminMax > 60:
+			print "tempsCaminantMaxim incorrecte."
+			sys.exit()
+	except:
+		pass
+
+
+
+
+	a = AStar(trans,origen,desti,distMax,transMax,paradMax,caminMax)
 	l = a.doAStarSearch()
 
 	if mode == 0:
