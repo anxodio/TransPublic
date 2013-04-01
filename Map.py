@@ -165,6 +165,17 @@ class Map(QtGui.QFrame):
                 qp.drawLine(0,i,w,i)
                 i += self.MIDA_COORD
 
+        def drawLineNames(self,qp):
+            # Funció de pintar les linies de metro/bus/altres
+            qp.setPen(QtCore.Qt.black)
+            qp.drawText(0, 10, u"Llegenda línies:")
+
+            y = 20
+            for line in self.trans.lines:
+                qp.setPen(self.getLineColor(line))
+                qp.drawText(0, y, line)
+                y += self.MIDA_EST/1.5
+
         def drawStMouse(self, qp):
             # Si tenim el ratoli a sobre d'una estacio, pintem el seu nom
             if self.stMouse:
@@ -199,8 +210,11 @@ class Map(QtGui.QFrame):
             font.setPixelSize(int(self.MIDA_EST/1.5))
             font.setBold(True)
             qp.setFont(font)
+
             for st in self.trans.stations:
                 self.drawStation(qp,st)
+
+            self.drawLineNames(qp) # Pintem la llegenda amb les linies
 
             try:
                 cami = self.parent.cami
