@@ -7,7 +7,7 @@ Utilització
 -----------
 
 Executar la interfície grafica, amb `python transPublic.py`
-Un cop oberta, el seu ús es molt senzill. Obrim un fitxer desde el menú (hi han dos de prova, lyon.yaml i lyon_extra.yaml).
+Un cop oberta, el seu ús es molt senzill. Obrim un fitxer desde el menú (hi ha dos de prova, lyon.yaml i lyon_extra.yaml).
 Un cop tenim el fitxer obert, només cal escollir dues estacions, i se'ns mostrarà el camí optim entre elles.
 A més, és poden configurar varies opcions extra (parades màximes, transbords màxims...)
 
